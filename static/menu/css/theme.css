@@ -1,0 +1,13 @@
+/* =====================
+   THEME VARIABLES
+   ===================== */
+
+:root {
+  --primary:     #652a29;
+  --border:      #cce9f1;
+  --card-yellow: #fff3bd;
+  --white:       #ffffff;
+
+  --radius-lg:   20px;
+  --radius-pill: 50px;
+}

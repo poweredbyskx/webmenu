@@ -1,0 +1,16 @@
+<div class="dropdown">
+  <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Меню
+  </button>
+  <ul class="dropdown-menu">
+    {% for c in menu_categories %}
+      <li>
+        <a class="dropdown-item" href="{% url 'category' c.slug %}">
+          {{ c.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li><span class="dropdown-item-text text-muted">Нет категорий</span></li>
+    {% endfor %}
+  </ul>
+</div>

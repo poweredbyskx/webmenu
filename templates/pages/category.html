@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-3">
+
+  <div class="d-flex align-items-center mb-4">
+    <a href="{% url 'menu' %}"
+       class="me-3 text-decoration-none"
+       style="font-size:20px;color:#231E1B;">
+      ←
+    </a>
+
+    <h4 class="m-0 fw-semibold">
+      {{ category.name }}
+    </h4>
+  </div>
+
+  <div class="row g-3">
+    {% for item in items %}
+      <div class="col-6">
+        <div style="background:white;border-radius:18px;padding:8px;">
+          {% if item.image %}
+            <img src="{{ item.image.url }}"
+                 style="width:100%;height:160px;object-fit:cover;border-radius:14px;"
+                 alt="{{ item.name }}">
+          {% endif %}
+
+          <div class="d-flex justify-content-between mt-2 px-1">
+            <small>{{ item.name }}</small>
+            <small class="fw-semibold">
+              {{ item.price|floatformat:"-2" }}
+            </small>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>В этой категории пока нет блюд</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% load i18n %}
+<div class="dropdown">
+  <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    {% get_current_language as LANGUAGE_CODE %}{{ LANGUAGE_CODE|upper }}
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    {% get_available_languages as LANGUAGES %}
+    {% for code, name in LANGUAGES %}
+      <li>
+        <form action="{% url 'set_language' %}" method="post" class="px-2 py-1">
+          {% csrf_token %}
+          <input type="hidden" name="language" value="{{ code }}">
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button type="submit" class="btn btn-link dropdown-item">{{ name }}</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

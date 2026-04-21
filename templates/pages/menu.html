@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page">
+
+  <header class="header">
+
+    <a href="/admin/" class="icon-btn" title="Админ">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M20 21V19C20 17.9 19.6 16.9 18.8 16.2C18.1 15.4 17.1 15 16 15H8C6.9 15 5.9 15.4 5.2 16.2C4.4 16.9 4 17.9 4 19V21M16 7C16 9.2 14.2 11 12 11C9.8 11 8 9.2 8 7C8 4.8 9.8 3 12 3C14.2 3 16 4.8 16 7Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <div class="search-container">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21L16.65 16.65M19 11C19 15.4 15.4 19 11 19C6.6 19 3 15.4 3 11C3 6.6 6.6 3 11 3C15.4 3 19 6.6 19 11Z"
+            stroke="#652a29" stroke-width="2"/>
+        </svg>
+
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Поиск"
+        >
+      </div>
+
+      <div class="search-results"></div>
+    </div>
+
+    <a href="https://instagram.com/kakao.breakfast/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Instagram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="20" height="20" rx="5" stroke="#652a29" stroke-width="2"/>
+        <circle cx="12" cy="12" r="4" stroke="#652a29" stroke-width="2"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="#652a29"/>
+      </svg>
+    </a>
+
+  </header>
+
+  <section class="hero">
+    <div class="hero-brand">
+      <a href="{% url 'home' %}" class="hero-logo-link">
+        <img
+          src="{% static 'menu/images/Primary_color_LogoPrimary Logo_descriptor@3x.png' %}"
+          class="hero-logo"
+          alt="КАКАО Кофе и Завтраки"
+          style="cursor: pointer;"
+        />
+      </a>
+
+      <a href="{% url 'menu' %}" class="btn-menu">меню</a>
+    </div>
+
+    <a href="{% url 'roasted' %}" class="hero-photo-wrap">
+      <img src="{% static 'menu/images/456b6252e3e22b9fb65aef5c7cac015c.jpg' %}"
+           class="hero-photo"
+           alt="Обжарка" />
+    </a>
+  </section>
+
+  <div class="actions">
+    <a href="tel:+99364359786" class="action-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M22 16.9V19.9C22 20.5 21.7 21.1 21.2 21.4C20.7 21.8 20.1 21.9 19.5 21.8C16.4 21.3 13.4 20.2 10.7 18.6C8.2 17.1 6 14.9 4.5 12.4C2.8 9.7 1.8 6.6 1.3 3.5C1.2 2.9 1.4 2.3 1.7 1.8C2.1 1.3 2.6 1 3.2 1H6.2C7.2 1 8 1.7 8.2 2.7C8.4 3.7 8.7 4.6 9.1 5.6C9.4 6.2 9.2 6.9 8.7 7.4L7.4 8.7C8.8 11.3 10.7 13.2 13.3 14.6L14.6 13.3C15.1 12.8 15.8 12.6 16.4 12.9C17.3 13.3 18.3 13.6 19.3 13.8C20.3 14 21 14.9 22 16.9Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 2L22 8M22 2L16 8" stroke="#652a29" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </a>
+
+    <a href="https://maps.app.goo.gl/XEjLdNFKJqW7418j9" target="_blank" rel="noopener noreferrer" class="action-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C8.1 2 5 5.1 5 9C5 14.3 12 22 12 22C12 22 19 14.3 19 9C19 5.1 15.9 2 12 2Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="9" r="3" stroke="#652a29" stroke-width="2"/>
+      </svg>
+    </a>
+  </div>
+
+  <section id="menu" class="menu-section">
+    <div class="categories" id="categoryTabs">
+      {% for category in categories %}
+        <button
+          type="button"
+          class="category-btn {% if category == active_category %}active{% endif %}"
+          data-category="{{ category.slug }}"
+        >
+          {{ category.name }}
+        </button>
+      {% endfor %}
+    </div>
+
+    <div class="items-grid" id="menu-items">
+      {% for item in items %}
+<div
+  class="item-card"
+  data-category="{{ item.category.slug }}"
+  data-item="{{ item.slug }}"
+  data-name="{{ item.name }}"
+  data-price="{{ item.price|floatformat:'-2' }}"
+  data-description="{{ item.description }}"
+  data-image="{% if item.image %}{{ item.image.url }}{% endif %}"
+  {% if active_category and item.category.slug != active_category.slug %}hidden{% endif %}
+>
+  {% if item.image %}
+    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+  {% endif %}
+
+  <div class="item-info">
+    <span class="item-name">{{ item.name }}</span>
+    <span class="item-price">{{ item.price|floatformat:"-2" }}</span>
+  </div>
+</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div id="product-modal-overlay" class="product-modal-overlay" aria-hidden="true">
+    <div class="product-modal-content">
+      <div class="product-card" role="dialog" aria-modal="true" aria-label="Детали">
+        <img
+          id="product-modal-image"
+          src=""
+          alt=""
+          class="product-card__image"
+        />
+
+        <div class="product-card__header">
+          <p class="product-card__title" id="product-modal-title"></p>
+          <p class="product-card__price" id="product-modal-price"></p>
+        </div>
+
+        <div class="product-card__divider"></div>
+
+        <p class="product-card__description" id="product-modal-description"></p>
+
+        <button
+          class="product-card__button"
+          id="product-modal-close"
+          type="button"
+          aria-label="Закрыть"
+        >
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M22.5 7.5L7.5 22.5M7.5 7.5L22.5 22.5"
+              stroke="white"
+              stroke-width="4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tabs = document.getElementById("categoryTabs");
+  const buttons = document.querySelectorAll(".category-btn");
+  const items = document.querySelectorAll(".item-card");
+
+  const input = document.querySelector(".search-input");
+  const results = document.querySelector(".search-results");
+
+  const modalOverlay = document.getElementById("product-modal-overlay");
+  const modalImage = document.getElementById("product-modal-image");
+  const modalTitle = document.getElementById("product-modal-title");
+  const modalPrice = document.getElementById("product-modal-price");
+  const modalDescription = document.getElementById("product-modal-description");
+  const modalCloseButton = document.getElementById("product-modal-close");
+
+  function openProductModal(itemEl) {
+    const name = itemEl.dataset.name || "";
+    const price = itemEl.dataset.price || "";
+    const description = itemEl.dataset.description || "";
+    const imageUrl = itemEl.dataset.image || "";
+
+    modalTitle.textContent = name;
+    modalPrice.textContent = price;
+    modalDescription.textContent = description;
+
+    if (imageUrl) {
+      modalImage.src = imageUrl;
+      modalImage.alt = name;
+      modalImage.style.display = "block";
+    } else {
+      modalImage.removeAttribute("src");
+      modalImage.alt = "";
+      modalImage.style.display = "none";
+    }
+
+    modalOverlay.classList.add("open");
+    modalOverlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeProductModal() {
+    modalOverlay.classList.remove("open");
+    modalOverlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  if (modalOverlay && modalCloseButton) {
+    items.forEach((itemEl) => {
+      itemEl.addEventListener("click", function () {
+        openProductModal(this);
+      });
+    });
+
+    modalCloseButton.addEventListener("click", closeProductModal);
+
+    modalOverlay.addEventListener("click", function (e) {
+      if (e.target === modalOverlay) {
+        closeProductModal();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modalOverlay.classList.contains("open")) {
+        closeProductModal();
+      }
+    });
+  }
+
+  function activateCategory(categorySlug) {
+    buttons.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.category === categorySlug);
+    });
+
+    items.forEach((item) => {
+      item.hidden = item.dataset.category !== categorySlug;
+    });
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const selectedCategory = this.dataset.category;
+      activateCategory(selectedCategory);
+    });
+  });
+
+  if (tabs) {
+    tabs.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        tabs.scrollLeft += e.deltaY * 1.5;
+      }
+    }, { passive: false });
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    tabs.addEventListener("mousedown", function (e) {
+      isDown = true;
+      startX = e.pageX - tabs.offsetLeft;
+      scrollLeft = tabs.scrollLeft;
+    });
+
+    tabs.addEventListener("mouseleave", function () {
+      isDown = false;
+    });
+
+    tabs.addEventListener("mouseup", function () {
+      isDown = false;
+    });
+
+    tabs.addEventListener("mousemove", function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - tabs.offsetLeft;
+      const walk = (x - startX) * 1.6;
+      tabs.scrollLeft = scrollLeft - walk;
+    });
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const categoryFromUrl = params.get("category");
+  const itemFromUrl = params.get("item");
+
+  if (categoryFromUrl) {
+    activateCategory(categoryFromUrl);
+  }
+
+  if (itemFromUrl) {
+    const targetItem = document.querySelector(`[data-item="${itemFromUrl}"]`);
+
+    if (targetItem) {
+      setTimeout(() => {
+        targetItem.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+        targetItem.classList.add("item-card-highlight");
+
+        setTimeout(() => {
+          targetItem.classList.remove("item-card-highlight");
+        }, 2000);
+      }, 200);
+    }
+  }
+
+  if (input && results) {
+    let timer = null;
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    input.addEventListener("input", function () {
+      const q = input.value.trim();
+
+      clearTimeout(timer);
+
+      if (!q) {
+        results.innerHTML = "";
+        results.style.display = "none";
+        return;
+      }
+
+      timer = setTimeout(async function () {
+        try {
+          const response = await fetch(`/api/search/?q=${encodeURIComponent(q)}`);
+          const data = await response.json();
+
+          if (!Array.isArray(data) || data.length === 0) {
+            results.innerHTML = `<div class="search-item">Ничего не найдено</div>`;
+            results.style.display = "flex";
+            return;
+          }
+
+          results.innerHTML = data.map(item => `
+            <a class="search-item"
+               href="/menu/?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}">
+              ${item.image ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">` : ""}
+              <div style="display:flex;flex-direction:column;">
+                <strong style="font-size:13px;color:#652a29;">${escapeHtml(item.name)}</strong>
+                <span style="font-size:12px;color:#652a29;">${escapeHtml(item.price)} · ${escapeHtml(item.category || "")}</span>
+              </div>
+            </a>
+          `).join("");
+
+          results.style.display = "flex";
+        } catch (error) {
+          results.innerHTML = `<div class="search-item">Ошибка поиска</div>`;
+          results.style.display = "flex";
+        }
+      }, 250);
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".search-container")) {
+        results.style.display = "none";
+      }
+    });
+
+    input.addEventListener("focus", function () {
+      if (results.innerHTML.trim()) {
+        results.style.display = "flex";
+      }
+    });
+  }
+});
+</script>
+
+
+{% endblock %}

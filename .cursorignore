@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+coverage
+.next
+.cache
+tmp
+*.log
+
+.env
+.env.*
+*.pem
+*.key
+*.p12
+secrets/
+terraform.tfstate
+.terraform

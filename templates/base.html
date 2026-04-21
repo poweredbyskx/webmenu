@@ -1,0 +1,23 @@
+{% load static %}
+{% load i18n %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}КАКАО{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'menu/css/theme.css' %}">
+  <link rel="stylesheet" href="{% static 'menu/css/style.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+  {% block content %}{% endblock %}
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

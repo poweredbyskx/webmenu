@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Меню ресторана</a>
+
+    <div class="d-flex align-items-center gap-2">
+      
+      {% include "includes/menu_button.html" %}
+      {% include "includes/language_switcher.html" %}
+
+      <form action="/search/" method="get" class="d-flex" role="search">
+        <input class="form-control form-control-sm"
+               type="search"
+               name="q"
+               placeholder="Поиск..."
+               value="{{ q|default:'' }}">
+        <button class="btn btn-outline-light btn-sm ms-2" type="submit">
+          Найти
+        </button>
+      </form>
+
+    </div>
+  </div>
+</nav>

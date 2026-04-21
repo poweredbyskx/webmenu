@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Кофе и Завтраки{% endblock %}
+
+{% block content %}
+
+<div class="page">
+
+  <header class="header">
+
+    {% if request.user.is_staff %}
+    <a href="/admin/" class="icon-btn" title="Админ">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M20 21V19C20 17.9 19.6 16.9 18.8 16.2C18.1 15.4 17.1 15 16 15H8C6.9 15 5.9 15.4 5.2 16.2C4.4 16.9 4 17.9 4 19V21M16 7C16 9.2 14.2 11 12 11C9.8 11 8 9.2 8 7C8 4.8 9.8 3 12 3C14.2 3 16 4.8 16 7Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    {% endif %}
+
+    <div class="search-container"
+         data-search-url="{% url 'search_api' %}"
+         data-menu-url="{% url 'menu' %}">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21L16.65 16.65M19 11C19 15.4 15.4 19 11 19C6.6 19 3 15.4 3 11C3 6.6 6.6 3 11 3C15.4 3 19 6.6 19 11Z"
+            stroke="#652a29" stroke-width="2"/>
+        </svg>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Поиск"
+        >
+      </div>
+      <div class="search-results"></div>
+    </div>
+
+    <a href="https://instagram.com/kakao.breakfast/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Instagram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="20" height="20" rx="5" stroke="#652a29" stroke-width="2"/>
+        <circle cx="12" cy="12" r="4" stroke="#652a29" stroke-width="2"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="#652a29"/>
+      </svg>
+    </a>
+
+  </header>
+
+  <section class="hero">
+
+    <div class="hero-brand">
+      <a href="{% url 'home' %}" class="hero-logo-link">
+        <img src="{% static 'menu/images/Primary_color_LogoPrimary Logo_descriptor@3x.png' %}"
+             class="hero-logo"
+             alt="КАКАО Кофе и Завтраки" />
+      </a>
+      <a href="{% url 'menu' %}" class="btn-menu">меню</a>
+    </div>
+
+    <a href="{% url 'roasted' %}" class="hero-photo-wrap">
+      <img src="{% static 'menu/images/456b6252e3e22b9fb65aef5c7cac015c.jpg' %}"
+           class="hero-photo"
+           alt="Обжарка" />
+    </a>
+
+  </section>
+
+  <div class="actions">
+
+    <a href="tel:+99364359786" class="action-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M22 16.9V19.9C22 20.5 21.7 21.1 21.2 21.4C20.7 21.8 20.1 21.9 19.5 21.8C16.4 21.3 13.4 20.2 10.7 18.6C8.2 17.1 6 14.9 4.5 12.4C2.8 9.7 1.8 6.6 1.3 3.5C1.2 2.9 1.4 2.3 1.7 1.8C2.1 1.3 2.6 1 3.2 1H6.2C7.2 1 8 1.7 8.2 2.7C8.4 3.7 8.7 4.6 9.1 5.6C9.4 6.2 9.2 6.9 8.7 7.4L7.4 8.7C8.8 11.3 10.7 13.2 13.3 14.6L14.6 13.3C15.1 12.8 15.8 12.6 16.4 12.9C17.3 13.3 18.3 13.6 19.3 13.8C20.3 14 21 14.9 22 16.9Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 2L22 8M22 2L16 8" stroke="#652a29" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </a>
+
+    <a href="https://maps.app.goo.gl/XEjLdNFKJqW7418j9" target="_blank" rel="noopener noreferrer" class="action-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C8.1 2 5 5.1 5 9C5 14.3 12 22 12 22C12 22 19 14.3 19 9C19 5.1 15.9 2 12 2Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="9" r="3" stroke="#652a29" stroke-width="2"/>
+      </svg>
+    </a>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const container = document.querySelector(".search-container");
+  const input = document.querySelector(".search-input");
+  const results = document.querySelector(".search-results");
+
+  if (!container || !input || !results) return;
+
+  const searchUrl = container.dataset.searchUrl;
+  const menuUrl = container.dataset.menuUrl;
+
+  let timer = null;
+
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  input.addEventListener("input", function () {
+    const q = input.value.trim();
+
+    clearTimeout(timer);
+
+    if (!q) {
+      results.innerHTML = "";
+      results.style.display = "none";
+      return;
+    }
+
+    timer = setTimeout(async function () {
+      try {
+        const response = await fetch(`${searchUrl}?q=${encodeURIComponent(q)}`);
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          results.innerHTML = `<div class="search-item">Ничего не найдено</div>`;
+          results.style.display = "flex";
+          return;
+        }
+
+        results.innerHTML = data.map(item => `
+          <a class="search-item"
+             href="${menuUrl}?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}">
+            ${item.image
+              ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">`
+              : ""}
+            <div style="display:flex;flex-direction:column;">
+              <strong style="font-size:13px;color:#652a29;">${escapeHtml(item.name)}</strong>
+              <span style="font-size:12px;color:#652a29;">${escapeHtml(item.price)} · ${escapeHtml(item.category || "")}</span>
+            </div>
+          </a>
+        `).join("");
+
+        results.style.display = "flex";
+
+      } catch (error) {
+        results.innerHTML = `<div class="search-item">Ошибка поиска</div>`;
+        results.style.display = "flex";
+      }
+    }, 250);
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".search-container")) {
+      results.style.display = "none";
+    }
+  });
+
+  input.addEventListener("focus", function () {
+    if (results.innerHTML.trim()) {
+      results.style.display = "flex";
+    }
+  });
+});
+</script>
+{% endblock %}
