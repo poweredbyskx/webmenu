@@ -1,4 +1,4 @@
-import menu.translation
+from . import translation  # noqa: F401
 
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
