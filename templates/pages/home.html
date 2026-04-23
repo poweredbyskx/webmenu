@@ -72,7 +72,7 @@
       </svg>
     </a>
 
-    <a href="https://maps.app.goo.gl/XEjLdNFKJqW7418j9" target="_blank" rel="noopener noreferrer" class="action-btn">
+    <a href="#" onclick="openMaps(event)" class="action-btn">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M12 2C8.1 2 5 5.1 5 9C5 14.3 12 22 12 22C12 22 19 14.3 19 9C19 5.1 15.9 2 12 2Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="12" cy="9" r="3" stroke="#652a29" stroke-width="2"/>
@@ -164,5 +164,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+function openMaps(e) {
+    e.preventDefault();
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+        window.open('maps://maps.apple.com/?ll=37.979200,58.328760&q=КАКАО+Кофе+и+Завтраки');
+    } else {
+        window.open('https://maps.app.goo.gl/XEjLdNFKJqW7418j9');
+    }
+}
 </script>
 {% endblock %}
