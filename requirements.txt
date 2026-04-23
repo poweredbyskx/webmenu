@@ -7,7 +7,7 @@ django-jazzmin==3.0.2
 django-modeltranslation==0.19.19
 gunicorn==25.1.0
 pilkit==3.0
-pillow==12.1.1
+pillow==12.2.0
 psycopg[binary]==3.2.3
 python-slugify==8.0.4
 sqlparse==0.5.5
