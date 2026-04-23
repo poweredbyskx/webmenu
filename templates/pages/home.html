@@ -168,7 +168,7 @@ function openMaps(e) {
     e.preventDefault();
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     if (isIOS) {
-        window.location.href = 'maps://maps.apple.com/?ll=37.897551,58.394592&q=Kakao.breakfast';
+        window.location.href = 'https://maps.apple.com/?ll=37.897551,58.394592&q=Kakao.breakfast';
     } else {
         window.location.href = 'https://maps.app.goo.gl/XEjLdNFKJqW7418j9';
     }
