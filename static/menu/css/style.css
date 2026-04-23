@@ -369,6 +369,7 @@ img {
   justify-content: center;
   padding: 16px;
   z-index: 1000;
+  overflow-y: auto;
 }
 
 .product-modal-overlay.open {
@@ -386,8 +387,9 @@ img {
 
 .product-card {
   position: relative;
-  width: min(410px, calc(100vw - 32px));
+  width: 100%;
   height: auto;
+  min-height: 500px;
   background-color: #ffffff;
   border: 2px solid #652a29;
   border-radius: 20px;
@@ -396,12 +398,13 @@ img {
   display: flex;
   flex-direction: column;
   gap: 0;
+  padding-bottom: 80px;
 }
 
 /* Image */
 .product-card__image {
   width: 100%;
-  height: min(370px, 50vw);
+  height: 300px;
   border-radius: 16px;
   object-fit: cover;
   flex-shrink: 0;
