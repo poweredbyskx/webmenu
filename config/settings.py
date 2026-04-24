@@ -155,3 +155,49 @@ LOGGING = {
         },
     },
 }
+
+# --- Jazzmin ------------------------------------------------------------
+JAZZMIN_SETTINGS = {
+    "site_title": "Какао Админ",
+    "site_header": "Какао",
+    "site_brand": "Какао",
+    "welcome_sign": "Добро пожаловать",
+    "copyright": "Какао Кофе и Завтраки",
+    
+    # Убирает боковое меню — на мобильном экономит место
+    "navigation_expanded": False,
+    
+    # Иконки для моделей
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+    },
+    
+    # Скрывает второстепенные элементы
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": True,
+    "footer_small_text": True,
+    "body_small_text": True,
+    "brand_small_text": True,
+    "brand_colour": False,
+    "accent": "accent-maroon",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": True,
+    "sidebar": "sidebar-light-maroon",
+    "sidebar_nav_small_text": True,
+    "sidebar_disable_expand": True,   # важно для мобильного
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True, # компактный стиль
+    "theme": "default",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    }
+}
