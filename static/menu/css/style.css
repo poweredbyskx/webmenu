@@ -241,6 +241,16 @@ img {
   transform: scale(0.97);
 }
 
+.action-btn {
+  gap: 8px;
+}
+
+.action-btn-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #652a29;
+  text-transform: uppercase;
+}
 /* =====================
    MENU PAGE
    ===================== */
