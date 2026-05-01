@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, TemplateView
 
-from .models import Category, Item
+from .models import Category, Item, RoastedCoffee
+
 
 logger = logging.getLogger(__name__)
 
@@ -157,3 +158,8 @@ def search_api(request):
 
 class RoastedView(TemplateView):
     template_name = "pages/roasted.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["coffees"] = RoastedCoffee.objects.filter(is_active=True)
+        return ctx
