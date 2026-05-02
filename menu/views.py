@@ -163,3 +163,7 @@ class RoastedView(TemplateView):
         ctx = super().get_context_data(**kwargs)
         ctx["coffees"] = RoastedCoffee.objects.filter(is_active=True)
         return ctx
+    
+
+class BeansView(TemplateView):
+    template_name = "pages/beans.html"

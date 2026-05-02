@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Как выбрать зерно — КАКАО{% endblock %}
+
+{% block content %}
+<div class="page">
+  <header class="header">
+    <a href="{% url 'roasted' %}" class="icon-btn" title="Назад">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <div class="search-container"
+         data-search-url="{% url 'search_api' %}"
+         data-menu-url="{% url 'menu' %}">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21L16.65 16.65M19 11C19 15.4 15.4 19 11 19C6.6 19 3 15.4 3 11C3 6.6 6.6 3 11 3C15.4 3 19 6.6 19 11Z" stroke="#652a29" stroke-width="2"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="Поиск">
+      </div>
+      <div class="search-results"></div>
+    </div>
+  </header>
+
+  <div class="beans-page">
+    <p class="beans-page__coming">Страница в разработке — скоро здесь появится гид по выбору зерна и способам заварки.</p>
+  </div>
+</div>
+{% endblock %}

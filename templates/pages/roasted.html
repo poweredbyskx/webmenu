@@ -31,21 +31,17 @@
       </svg>
     </a>
   </header>
-
-  <!-- Заголовок страницы -->
-  <div class="roasted-title-box">
-    <p class="roasted-title">ЧТО ТАКОЕ<br>KAKAO.COFFEE?</p>
-  </div>
-
-  <!-- Описание -->
-  <p class="roasted-desc">
-    Это выбор зеленого зерна, обжарка и вкусная чашка у нас в кофейне или у вас дома.
-    Наша главная цель — сделать хороший кофе доступным, мы несем эту культуру с первого дня нашей работы.
-  </p>
-
-  <!-- Карточки зерна -->
+<!-- Баннер → /beans/ -->
+  <a href="{% url 'beans' %}" class="beans-banner">
+    <img src="{% static 'menu/images/9b418064cf47d3dd8b630ae74bc3af5a.jpg' %}" 
+         alt="Как выбрать зерно" 
+         class="beans-banner__img">
+    <div class="beans-banner__overlay">
+      <p class="beans-banner__text">КАК ВЫБРАТЬ ЗЕРНО<br>И ПРИГОТОВИТЬ<br>ВКУСНЫЙ КОФЕ ДОМА</p>
+    </div>
+  </a>
+    <!-- Карточки зерна -->
   {% if coffees %}
-    <p class="roasted-section-title">Три составляющие отличной чашки кофе.</p>
     <div class="roasted-grid">
       {% for coffee in coffees %}
       <div class="roasted-card">
@@ -76,6 +72,16 @@
   {% else %}
     <p class="roasted-empty">Скоро здесь появятся позиции обжарки.</p>
   {% endif %}
+  <!-- Заголовок страницы -->
+  <div class="roasted-title-box">
+    <p class="roasted-title">ЧТО ТАКОЕ<br>KAKAO.COFFEE?</p>
+  </div>
+
+  <!-- Описание -->
+  <p class="roasted-desc">
+    Это выбор зеленого зерна, обжарка и вкусная чашка у нас в кофейне или у вас дома.
+    Наша главная цель — сделать хороший кофе доступным, мы несем эту культуру с первого дня нашей работы.
+  </p>
 
 </div>
 {% endblock %}
