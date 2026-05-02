@@ -626,3 +626,11 @@ img {
   text-align: center;
   padding: 20px 0;
 }
+
+/* =====================
+   REMOVE FOCUS OUTLINE
+   ===================== */
+
+*:focus {
+  outline: none;
+}
