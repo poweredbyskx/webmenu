@@ -634,3 +634,8 @@ img {
 *:focus {
   outline: none;
 }
+
+.category-btn {
+  -webkit-appearance: none;
+  appearance: none;
+}
