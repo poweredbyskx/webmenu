@@ -705,32 +705,10 @@ img {
    COMPACT HEADER ON SCROLL
    ===================== */
 
-.header {
-  transition: padding 0.3s ease;
-}
-
-.actions {
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-  max-height: 100px;
-  overflow: hidden;
-}
-
 .actions--hidden {
   opacity: 0;
   max-height: 0;
   pointer-events: none;
-}
-
-.header-action {
-  opacity: 0;
-  width: 0;
-  min-width: 0;
-  padding: 0;
-  border: none;
-  box-shadow: none;
-  pointer-events: none;
-  transition: opacity 0.3s ease, width 0.3s ease, margin 0.3s ease;
-  overflow: hidden;
 }
 
 .header--compact .header-action {

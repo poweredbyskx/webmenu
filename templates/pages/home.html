@@ -188,14 +188,29 @@ function openMaps(e) {
     }
 }
 
-// Shrinking header on scroll
-const header = document.querySelector('.header');
-const actions = document.querySelector('.actions');
+// Scroll-linked header
+  const header = document.querySelector('.header');
+  const actions = document.querySelector('.actions');
+  const actionsHeight = actions ? actions.offsetHeight : 0;
 
-window.addEventListener('scroll', () => {
-  const scrolled = window.scrollY > 60;
-  header.classList.toggle('header--compact', scrolled);
-  actions.classList.toggle('actions--hidden', scrolled);
-});
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const progress = Math.min(scrollY / actionsHeight, 1);
+
+    if (actions) {
+      actions.style.opacity = 1 - progress;
+      actions.style.maxHeight = (actionsHeight * (1 - progress)) + 'px';
+      actions.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
+    }
+
+    // Иконки в хедере появляются обратно пропорционально
+    document.querySelectorAll('.header-action').forEach(el => {
+      el.style.opacity = progress;
+      el.style.width = progress > 0.1 ? '40px' : '0px';
+      el.style.minWidth = progress > 0.1 ? '40px' : '0px';
+      el.style.pointerEvents = progress >= 0.9 ? 'auto' : 'none';
+      el.style.border = progress > 0.1 ? '1.5px solid var(--border)' : 'none';
+    });
+  }, { passive: true });
 </script>
 {% endblock %}
