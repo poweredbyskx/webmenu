@@ -36,6 +36,20 @@
   </footer>
 
   {% block extra_js %}{% endblock %}
+<script>
+  const langBtn = document.getElementById('langBtn');
+  const langDropdown = document.getElementById('langDropdown');
 
+  if (langBtn && langDropdown) {
+    langBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function() {
+      langDropdown.classList.remove('open');
+    });
+  }
+</script>
 </body>
 </html>

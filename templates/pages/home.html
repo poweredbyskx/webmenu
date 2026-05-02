@@ -10,14 +10,7 @@
 
   <header class="header">
 
-    {% if request.user.is_staff %}
-    <a href="/admin/" class="icon-btn" title="Админ">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M20 21V19C20 17.9 19.6 16.9 18.8 16.2C18.1 15.4 17.1 15 16 15H8C6.9 15 5.9 15.4 5.2 16.2C4.4 16.9 4 17.9 4 19V21M16 7C16 9.2 14.2 11 12 11C9.8 11 8 9.2 8 7C8 4.8 9.8 3 12 3C14.2 3 16 4.8 16 7Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-    {% endif %}
-
+    {% include "includes/language_switcher.html" %}
     <div class="search-container"
          data-search-url="{% url 'search_api' %}"
          data-menu-url="{% url 'menu' %}">

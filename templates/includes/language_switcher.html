@@ -1,19 +1,21 @@
 {% load i18n %}
-<div class="dropdown">
-  <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    {% get_current_language as LANGUAGE_CODE %}{{ LANGUAGE_CODE|upper }}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+
+<div class="lang-switcher">
+  <button class="icon-btn lang-switcher__btn" type="button" id="langBtn">
+    <span class="lang-switcher__current">{% if LANGUAGE_CODE == "tk" %}TM{% else %}{{ LANGUAGE_CODE|upper }}{% endif %}</span>
   </button>
-  <ul class="dropdown-menu dropdown-menu-end">
-    {% get_available_languages as LANGUAGES %}
+  <div class="lang-switcher__dropdown" id="langDropdown">
     {% for code, name in LANGUAGES %}
-      <li>
-        <form action="{% url 'set_language' %}" method="post" class="px-2 py-1">
-          {% csrf_token %}
-          <input type="hidden" name="language" value="{{ code }}">
-          <input type="hidden" name="next" value="{{ request.get_full_path }}">
-          <button type="submit" class="btn btn-link dropdown-item">{{ name }}</button>
-        </form>
-      </li>
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="language" value="{{ code }}">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" class="lang-switcher__option {% if code == LANGUAGE_CODE %}lang-switcher__option--active{% endif %}">
+          {% if code == "tk" %}TM{% else %}{{ code|upper }}{% endif %}
+        </button>
+      </form>
     {% endfor %}
-  </ul>
+  </div>
 </div>
