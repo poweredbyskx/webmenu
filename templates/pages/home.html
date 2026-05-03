@@ -181,29 +181,63 @@ function openMaps(e) {
     }
 }
 
-// Scroll-linked header
-  const header = document.querySelector('.header');
-  const actions = document.querySelector('.actions');
-  const actionsHeight = actions ? actions.offsetHeight : 0;
+// Scroll-linked header — срабатывает когда actions достигает хедера
+const header = document.querySelector('.header');
+const actions = document.querySelector('.actions');
+const langSwitcher = document.querySelector('.lang-switcher');
+const igBtn = document.querySelector('a[title="Instagram"]');
+const searchContainer = document.querySelector('.search-container');
 
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const progress = Math.min(scrollY / actionsHeight, 1);
+window.addEventListener('scroll', () => {
+  if (!actions || !header) return;
 
-    if (actions) {
-      actions.style.opacity = 1 - progress;
-      actions.style.maxHeight = (actionsHeight * (1 - progress)) + 'px';
-      actions.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
-    }
+  const headerBottom = header.getBoundingClientRect().bottom;
+  const actionsTop = actions.getBoundingClientRect().top;
+  const actionsHeight = actions.offsetHeight;
 
-    // Иконки в хедере появляются обратно пропорционально
-    document.querySelectorAll('.header-action').forEach(el => {
-      el.style.opacity = progress;
-      el.style.width = progress > 0.1 ? '40px' : '0px';
-      el.style.minWidth = progress > 0.1 ? '40px' : '0px';
-      el.style.pointerEvents = progress >= 0.9 ? 'auto' : 'none';
-      el.style.border = progress > 0.1 ? '1.5px solid var(--border)' : 'none';
-    });
-  }, { passive: true });
+  // Расстояние от низа хедера до верха actions
+  const distance = actionsTop - headerBottom;
+
+  // progress 0 = actions ещё не достигли хедера
+  // progress 1 = actions полностью скрылись за хедером
+  const progress = Math.max(0, Math.min(1, -distance / actionsHeight));
+
+  // Actions уходят вверх
+  actions.style.opacity = 1 - progress;
+  actions.style.maxHeight = (actionsHeight * (1 - progress)) + 'px';
+  actions.style.overflow = 'hidden';
+  actions.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
+
+  // Язык и Instagram исчезают
+  if (langSwitcher) {
+    langSwitcher.style.opacity = 1 - progress;
+    langSwitcher.style.width = progress >= 1 ? '0' : '';
+    langSwitcher.style.overflow = 'hidden';
+    langSwitcher.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
+  }
+  if (igBtn) {
+    igBtn.style.opacity = 1 - progress;
+    igBtn.style.width = progress >= 1 ? '0' : '';
+    igBtn.style.overflow = 'hidden';
+    igBtn.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
+  }
+
+  // Поиск сужается
+  if (searchContainer) {
+    searchContainer.style.flexShrink = '1';
+  }
+
+  // Иконки звонка и карты появляются
+  document.querySelectorAll('.header-action').forEach(el => {
+    el.style.opacity = progress;
+    el.style.width = progress > 0.05 ? '40px' : '0px';
+    el.style.minWidth = progress > 0.05 ? '40px' : '0px';
+    el.style.height = '40px';
+    el.style.pointerEvents = progress >= 0.9 ? 'auto' : 'none';
+    el.style.border = progress > 0.05 ? '1.5px solid var(--border)' : 'none';
+    el.style.overflow = 'hidden';
+  });
+
+}, { passive: true });
 </script>
 {% endblock %}
