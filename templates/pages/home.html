@@ -181,61 +181,67 @@ function openMaps(e) {
     }
 }
 
-// Scroll-linked header — срабатывает когда actions достигает хедера
+// Scroll-linked header
 const header = document.querySelector('.header');
 const actions = document.querySelector('.actions');
 const langSwitcher = document.querySelector('.lang-switcher');
 const igBtn = document.querySelector('a[title="Instagram"]');
-const searchContainer = document.querySelector('.search-container');
+const headerActions = document.querySelectorAll('.header-action');
+
+let actionsOriginalHeight = 0;
+
+window.addEventListener('load', () => {
+  actionsOriginalHeight = actions ? actions.offsetHeight : 0;
+});
 
 window.addEventListener('scroll', () => {
   if (!actions || !header) return;
 
-  const headerBottom = header.getBoundingClientRect().bottom;
-  const actionsTop = actions.getBoundingClientRect().top;
-  const actionsHeight = actions.offsetHeight;
+  const headerHeight = header.offsetHeight;
+  const actionsOffsetTop = actions.offsetTop;
+  const scrollY = window.scrollY;
 
-  // Расстояние от низа хедера до верха actions
-  const distance = actionsTop - headerBottom;
+  // Когда начинается анимация — когда верх actions достигает низа хедера
+  const triggerStart = actionsOffsetTop - headerHeight;
+  const triggerEnd = triggerStart + actionsOriginalHeight;
 
-  // progress 0 = actions ещё не достигли хедера
-  // progress 1 = actions полностью скрылись за хедером
-  const progress = Math.max(0, Math.min(1, -distance / actionsHeight));
+  const progress = Math.max(0, Math.min(1, (scrollY - triggerStart) / (triggerEnd - triggerStart)));
 
-  // Actions уходят вверх
+  // Actions исчезают
   actions.style.opacity = 1 - progress;
-  actions.style.maxHeight = (actionsHeight * (1 - progress)) + 'px';
+  actions.style.maxHeight = (actionsOriginalHeight * (1 - progress)) + 'px';
   actions.style.overflow = 'hidden';
   actions.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
 
-  // Язык и Instagram исчезают
+  // Язык исчезает
   if (langSwitcher) {
     langSwitcher.style.opacity = 1 - progress;
-    langSwitcher.style.width = progress >= 1 ? '0' : '';
+    langSwitcher.style.width = progress < 1 ? '' : '0';
+    langSwitcher.style.minWidth = progress < 1 ? '' : '0';
     langSwitcher.style.overflow = 'hidden';
     langSwitcher.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
   }
+
+  // Instagram исчезает
   if (igBtn) {
     igBtn.style.opacity = 1 - progress;
-    igBtn.style.width = progress >= 1 ? '0' : '';
+    igBtn.style.width = progress < 1 ? '' : '0';
+    igBtn.style.minWidth = progress < 1 ? '' : '0';
     igBtn.style.overflow = 'hidden';
     igBtn.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
   }
 
-  // Поиск сужается
-  if (searchContainer) {
-    searchContainer.style.flexShrink = '1';
-  }
-
   // Иконки звонка и карты появляются
-  document.querySelectorAll('.header-action').forEach(el => {
+  headerActions.forEach(el => {
     el.style.opacity = progress;
-    el.style.width = progress > 0.05 ? '40px' : '0px';
-    el.style.minWidth = progress > 0.05 ? '40px' : '0px';
+    el.style.width = progress > 0 ? '40px' : '0px';
+    el.style.minWidth = progress > 0 ? '40px' : '0px';
     el.style.height = '40px';
-    el.style.pointerEvents = progress >= 0.9 ? 'auto' : 'none';
-    el.style.border = progress > 0.05 ? '1.5px solid var(--border)' : 'none';
-    el.style.overflow = 'hidden';
+    el.style.border = progress > 0.1 ? '1.5px solid var(--border)' : 'none';
+    el.style.boxShadow = progress > 0.1 ? '0 2px 6px rgba(0,0,0,0.08)' : 'none';
+    el.style.pointerEvents = progress >= 1 ? 'auto' : 'none';
+    el.style.overflow = 'visible';
+    el.style.padding = '';
   });
 
 }, { passive: true });
