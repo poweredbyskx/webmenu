@@ -268,7 +268,6 @@ img {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0 0 6px;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   touch-action: pan-x;
