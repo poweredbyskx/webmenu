@@ -13,14 +13,12 @@
           <path d="M21 21L16.65 16.65M19 11C19 15.4 15.4 19 11 19C6.6 19 3 15.4 3 11C3 6.6 6.6 3 11 3C15.4 3 19 6.6 19 11Z"
             stroke="#652a29" stroke-width="2"/>
         </svg>
-
         <input
           type="text"
           class="search-input"
           placeholder="Поиск"
         >
       </div>
-
       <div class="search-results"></div>
     </div>
 
@@ -43,7 +41,6 @@
           style="cursor: pointer;"
         />
       </a>
-
       <a href="{% url 'menu' %}" class="btn-menu">меню</a>
     </div>
 
@@ -87,25 +84,24 @@
 
     <div class="items-grid" id="menu-items">
       {% for item in items %}
-<div
-  class="item-card"
-  data-category="{{ item.category.slug }}"
-  data-item="{{ item.slug }}"
-  data-name="{{ item.name }}"
-  data-price="{{ item.price|floatformat:'-2' }}"
-  data-description="{{ item.description }}"
-  data-image="{% if item.image %}{{ item.image.url }}{% endif %}"
-  {% if active_category and item.category.slug != active_category.slug %}hidden{% endif %}
->
-  {% if item.image %}
-    <img src="{{ item.image.url }}" alt="{{ item.name }}">
-  {% endif %}
-
-  <div class="item-info">
-    <span class="item-name">{{ item.name }}</span>
-    <span class="item-price">{{ item.price|floatformat:"-2" }}</span>
-  </div>
-</div>
+      <div
+        class="item-card"
+        data-category="{{ item.category.slug }}"
+        data-item="{{ item.slug }}"
+        data-name="{{ item.name }}"
+        data-price="{{ item.price|floatformat:'-2' }}"
+        data-description="{{ item.description }}"
+        data-image="{% if item.image %}{{ item.image.url }}{% endif %}"
+        {% if active_category and item.category.slug != active_category.slug %}hidden{% endif %}
+      >
+        {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.name }}">
+        {% endif %}
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-price">{{ item.price|floatformat:"-2" }}</span>
+        </div>
+      </div>
       {% endfor %}
     </div>
   </section>
@@ -113,42 +109,16 @@
   <div id="product-modal-overlay" class="product-modal-overlay" aria-hidden="true">
     <div class="product-modal-content">
       <div class="product-card" role="dialog" aria-modal="true" aria-label="Детали">
-        <img
-          id="product-modal-image"
-          src=""
-          alt=""
-          class="product-card__image"
-        />
-
+        <img id="product-modal-image" src="" alt="" class="product-card__image"/>
         <div class="product-card__header">
           <p class="product-card__title" id="product-modal-title"></p>
           <p class="product-card__price" id="product-modal-price"></p>
         </div>
-
         <div class="product-card__divider"></div>
-
         <p class="product-card__description" id="product-modal-description"></p>
-
-        <button
-          class="product-card__button"
-          id="product-modal-close"
-          type="button"
-          aria-label="Закрыть"
-        >
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M22.5 7.5L7.5 22.5M7.5 7.5L22.5 22.5"
-              stroke="white"
-              stroke-width="4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+        <button class="product-card__button" id="product-modal-close" type="button" aria-label="Закрыть">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <path d="M22.5 7.5L7.5 22.5M7.5 7.5L22.5 22.5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
@@ -162,10 +132,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const tabs = document.getElementById("categoryTabs");
   const buttons = document.querySelectorAll(".category-btn");
   const items = document.querySelectorAll(".item-card");
-
   const input = document.querySelector(".search-input");
   const results = document.querySelector(".search-results");
-
   const modalOverlay = document.getElementById("product-modal-overlay");
   const modalImage = document.getElementById("product-modal-image");
   const modalTitle = document.getElementById("product-modal-title");
@@ -173,16 +141,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalDescription = document.getElementById("product-modal-description");
   const modalCloseButton = document.getElementById("product-modal-close");
 
+  // Модальное окно
   function openProductModal(itemEl) {
     const name = itemEl.dataset.name || "";
     const price = itemEl.dataset.price || "";
     const description = itemEl.dataset.description || "";
     const imageUrl = itemEl.dataset.image || "";
-
     modalTitle.textContent = name;
     modalPrice.textContent = price;
     modalDescription.textContent = description;
-
     if (imageUrl) {
       modalImage.src = imageUrl;
       modalImage.alt = name;
@@ -192,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
       modalImage.alt = "";
       modalImage.style.display = "none";
     }
-
     modalOverlay.classList.add("open");
     modalOverlay.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -210,27 +176,20 @@ document.addEventListener("DOMContentLoaded", function () {
         openProductModal(this);
       });
     });
-
     modalCloseButton.addEventListener("click", closeProductModal);
-
     modalOverlay.addEventListener("click", function (e) {
-      if (e.target === modalOverlay) {
-        closeProductModal();
-      }
+      if (e.target === modalOverlay) closeProductModal();
     });
-
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && modalOverlay.classList.contains("open")) {
-        closeProductModal();
-      }
+      if (e.key === "Escape" && modalOverlay.classList.contains("open")) closeProductModal();
     });
   }
 
+  // Переключение категорий
   function activateCategory(categorySlug) {
     buttons.forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.category === categorySlug);
     });
-
     items.forEach((item) => {
       item.hidden = item.dataset.category !== categorySlug;
     });
@@ -238,11 +197,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   buttons.forEach((button) => {
     button.addEventListener("click", function () {
-      const selectedCategory = this.dataset.category;
-      activateCategory(selectedCategory);
+      activateCategory(this.dataset.category);
     });
   });
 
+  // Скролл категорий мышью (десктоп)
   if (tabs) {
     tabs.addEventListener("wheel", function (e) {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -260,66 +219,82 @@ document.addEventListener("DOMContentLoaded", function () {
       startX = e.pageX - tabs.offsetLeft;
       scrollLeft = tabs.scrollLeft;
     });
-
-    tabs.addEventListener("mouseleave", function () {
-      isDown = false;
-    });
-
-    tabs.addEventListener("mouseup", function () {
-      isDown = false;
-    });
-
+    tabs.addEventListener("mouseleave", () => { isDown = false; });
+    tabs.addEventListener("mouseup", () => { isDown = false; });
     tabs.addEventListener("mousemove", function (e) {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - tabs.offsetLeft;
-      const walk = (x - startX) * 1.6;
-      tabs.scrollLeft = scrollLeft - walk;
+      tabs.scrollLeft = scrollLeft - (x - startX) * 1.6;
     });
-  }
-  // Touch swipe для категорий на мобильных
-  let touchStartX = 0;
-  let touchScrollLeft = 0;
 
-  if (tabs) {
+    // Скролл категорий пальцем (мобильный)
+    let touchStartX = 0;
+    let touchScrollLeft = 0;
     tabs.addEventListener('touchstart', function(e) {
       touchStartX = e.touches[0].pageX;
       touchScrollLeft = tabs.scrollLeft;
     }, { passive: true });
-
     tabs.addEventListener('touchmove', function(e) {
-      const x = e.touches[0].pageX;
-      const walk = (touchStartX - x) * 1.2;
-      tabs.scrollLeft = touchScrollLeft + walk;
+      tabs.scrollLeft = touchScrollLeft + (touchStartX - e.touches[0].pageX) * 1.2;
     }, { passive: true });
   }
+
+  // Свайп по блюдам — переключение категорий
+  const itemsGrid = document.getElementById('menu-items');
+  let swipeTouchStartX = 0;
+  let swipeTouchStartY = 0;
+
+  if (itemsGrid) {
+    itemsGrid.addEventListener('touchstart', function(e) {
+      swipeTouchStartX = e.touches[0].clientX;
+      swipeTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    itemsGrid.addEventListener('touchend', function(e) {
+      const dx = e.changedTouches[0].clientX - swipeTouchStartX;
+      const dy = e.changedTouches[0].clientY - swipeTouchStartY;
+
+      // Только горизонтальный свайп
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+
+      const categoryList = Array.from(buttons).map(b => b.dataset.category);
+      const activeBtn = document.querySelector('.category-btn.active');
+      const currentIndex = categoryList.indexOf(activeBtn?.dataset.category);
+
+      let nextIndex;
+      if (dx < 0) {
+        nextIndex = Math.min(currentIndex + 1, categoryList.length - 1);
+      } else {
+        nextIndex = Math.max(currentIndex - 1, 0);
+      }
+
+      if (nextIndex !== currentIndex) {
+        activateCategory(categoryList[nextIndex]);
+        buttons[nextIndex]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }, { passive: true });
+  }
+
+  // URL параметры
   const params = new URLSearchParams(window.location.search);
   const categoryFromUrl = params.get("category");
   const itemFromUrl = params.get("item");
 
-  if (categoryFromUrl) {
-    activateCategory(categoryFromUrl);
-  }
+  if (categoryFromUrl) activateCategory(categoryFromUrl);
 
   if (itemFromUrl) {
     const targetItem = document.querySelector(`[data-item="${itemFromUrl}"]`);
-
     if (targetItem) {
       setTimeout(() => {
-        targetItem.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
+        targetItem.scrollIntoView({ behavior: "smooth", block: "center" });
         targetItem.classList.add("item-card-highlight");
-
-        setTimeout(() => {
-          targetItem.classList.remove("item-card-highlight");
-        }, 2000);
+        setTimeout(() => targetItem.classList.remove("item-card-highlight"), 2000);
       }, 200);
     }
   }
 
+  // Поиск
   if (input && results) {
     let timer = null;
 
@@ -334,29 +309,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     input.addEventListener("input", function () {
       const q = input.value.trim();
-
       clearTimeout(timer);
-
-      if (!q) {
-        results.innerHTML = "";
-        results.style.display = "none";
-        return;
-      }
-
+      if (!q) { results.innerHTML = ""; results.style.display = "none"; return; }
       timer = setTimeout(async function () {
         try {
           const response = await fetch(`/api/search/?q=${encodeURIComponent(q)}`);
           const data = await response.json();
-
           if (!Array.isArray(data) || data.length === 0) {
             results.innerHTML = `<div class="search-item">Ничего не найдено</div>`;
             results.style.display = "flex";
             return;
           }
-
           results.innerHTML = data.map(item => `
-            <a class="search-item"
-               href="/menu/?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}">
+            <a class="search-item" href="/menu/?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}">
               ${item.image ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">` : ""}
               <div style="display:flex;flex-direction:column;">
                 <strong style="font-size:13px;color:#652a29;">${escapeHtml(item.name)}</strong>
@@ -364,7 +329,6 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
             </a>
           `).join("");
-
           results.style.display = "flex";
         } catch (error) {
           results.innerHTML = `<div class="search-item">Ошибка поиска</div>`;
@@ -374,43 +338,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.addEventListener("click", function (e) {
-      if (!e.target.closest(".search-container")) {
-        results.style.display = "none";
-      }
+      if (!e.target.closest(".search-container")) results.style.display = "none";
     });
 
     input.addEventListener("focus", function () {
-      if (results.innerHTML.trim()) {
-        results.style.display = "flex";
-      }
+      if (results.innerHTML.trim()) results.style.display = "flex";
     });
   }
 });
-// Scroll-linked header
-  const header = document.querySelector('.header');
-  const actions = document.querySelector('.actions');
-  const actionsHeight = actions ? actions.offsetHeight : 0;
-
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const progress = Math.min(scrollY / actionsHeight, 1);
-
-    if (actions) {
-      actions.style.opacity = 1 - progress;
-      actions.style.maxHeight = (actionsHeight * (1 - progress)) + 'px';
-      actions.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
-    }
-
-    // Иконки в хедере появляются обратно пропорционально
-    document.querySelectorAll('.header-action').forEach(el => {
-      el.style.opacity = progress;
-      el.style.width = progress > 0.1 ? '40px' : '0px';
-      el.style.minWidth = progress > 0.1 ? '40px' : '0px';
-      el.style.pointerEvents = progress >= 0.9 ? 'auto' : 'none';
-      el.style.border = progress > 0.1 ? '1.5px solid var(--border)' : 'none';
-    });
-  }, { passive: true });
 </script>
-
 
 {% endblock %}
