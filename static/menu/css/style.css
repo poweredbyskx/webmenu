@@ -821,26 +821,3 @@ img {
   background: var(--border);
   font-weight: 700;
 }
-
-/* =====================
-   HEADER ACTIONS
-   ===================== */
-
-.header-action {
-  opacity: 0;
-  width: 0;
-  min-width: 0;
-  height: 52px;
-  padding: 0;
-  border: none;
-  box-shadow: none;
-  pointer-events: none;
-  overflow: hidden;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}

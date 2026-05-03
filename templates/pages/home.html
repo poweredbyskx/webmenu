@@ -35,18 +35,6 @@
         <circle cx="17.5" cy="6.5" r="1" fill="#652a29"/>
       </svg>
     </a>
-<!-- Иконки появляются при скролле -->
-    <a href="tel:+99364359786" class="icon-btn header-action" id="headerCall">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M22 16.9V19.9C22 20.5 21.7 21.1 21.2 21.4C20.7 21.8 20.1 21.9 19.5 21.8C16.4 21.3 13.4 20.2 10.7 18.6C8.2 17.1 6 14.9 4.5 12.4C2.8 9.7 1.8 6.6 1.3 3.5C1.2 2.9 1.4 2.3 1.7 1.8C2.1 1.3 2.6 1 3.2 1H6.2C7.2 1 8 1.7 8.2 2.7C8.4 3.7 8.7 4.6 9.1 5.6C9.4 6.2 9.2 6.9 8.7 7.4L7.4 8.7C8.8 11.3 10.7 13.2 13.3 14.6L14.6 13.3C15.1 12.8 15.8 12.6 16.4 12.9C17.3 13.3 18.3 13.6 19.3 13.8C20.3 14 21 14.9 22 16.9Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-    <a href="#" onclick="openMaps(event)" class="icon-btn header-action" id="headerMap">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2C8.1 2 5 5.1 5 9C5 14.3 12 22 12 22C12 22 19 14.3 19 9C19 5.1 15.9 2 12 2Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="12" cy="9" r="3" stroke="#652a29" stroke-width="2"/>
-      </svg>
-    </a>
   </header>
 
   <section class="hero">
@@ -180,69 +168,5 @@ function openMaps(e) {
         window.location.href = 'https://maps.app.goo.gl/XEjLdNFKJqW7418j9';
     }
 }
-
-// Scroll-linked header
-const header = document.querySelector('.header');
-const actions = document.querySelector('.actions');
-const langSwitcher = document.querySelector('.lang-switcher');
-const igBtn = document.querySelector('a[title="Instagram"]');
-const headerActions = document.querySelectorAll('.header-action');
-
-let actionsH = 0;
-let triggerStart = 0;
-
-function initScroll() {
-  if (!actions || !header) return;
-  actionsH = actions.getBoundingClientRect().height;
-  // triggerStart = сколько надо проскроллить чтобы верх actions коснулся низа хедера
-  triggerStart = actions.getBoundingClientRect().top + window.scrollY - header.getBoundingClientRect().height;
-}
-
-// Инициализируем после полной загрузки картинок
-window.addEventListener('load', initScroll);
-window.addEventListener('resize', initScroll);
-
-window.addEventListener('scroll', () => {
-  if (!actions || !actionsH) return;
-
-  const scrollY = window.scrollY;
-  const progress = Math.max(0, Math.min(1, (scrollY - triggerStart) / actionsH));
-
-  // Actions исчезают синхронно со скроллом
-  actions.style.opacity = 1 - progress;
-  actions.style.maxHeight = (actionsH * (1 - progress)) + 'px';
-  actions.style.overflow = 'hidden';
-  actions.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
-
-  // Язык исчезает
-  if (langSwitcher) {
-    langSwitcher.style.opacity = 1 - progress;
-    langSwitcher.style.width = (52 * (1 - progress)) + 'px';
-    langSwitcher.style.minWidth = (52 * (1 - progress)) + 'px';
-    langSwitcher.style.overflow = 'hidden';
-    langSwitcher.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
-  }
-
-  // Instagram исчезает
-  if (igBtn) {
-    igBtn.style.opacity = 1 - progress;
-    igBtn.style.width = (52 * (1 - progress)) + 'px';
-    igBtn.style.minWidth = (52 * (1 - progress)) + 'px';
-    igBtn.style.overflow = 'hidden';
-    igBtn.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
-  }
-
-  // Иконки звонка и карты появляются
-  headerActions.forEach(el => {
-    el.style.opacity = progress;
-    el.style.width = (40 * progress) + 'px';
-    el.style.minWidth = (40 * progress) + 'px';
-    el.style.border = progress > 0.1 ? '1.5px solid var(--border)' : 'none';
-    el.style.boxShadow = progress > 0.1 ? '0 2px 6px rgba(0,0,0,0.08)' : 'none';
-    el.style.pointerEvents = progress >= 1 ? 'auto' : 'none';
-    el.style.padding = progress > 0.5 ? '' : '0';
-  });
-
-}, { passive: true });
 </script>
 {% endblock %}
