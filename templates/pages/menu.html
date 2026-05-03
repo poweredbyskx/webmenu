@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
       touchScrollLeft = tabs.scrollLeft;
     }, { passive: true });
     tabs.addEventListener('touchmove', function(e) {
-      tabs.scrollLeft = touchScrollLeft + (touchStartX - e.touches[0].pageX) * 1.2;
+      tabs.scrollLeft = touchScrollLeft + (touchStartX - e.touches[0].pageX);
     }, { passive: true });
   }
 
