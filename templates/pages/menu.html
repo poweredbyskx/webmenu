@@ -123,15 +123,17 @@
     <div class="product-modal-content">
       <div class="product-card" role="dialog" aria-modal="true" aria-label="Детали">
         <img id="product-modal-image" src="" alt="" class="product-card__image"/>
-        <div class="product-card__header">
-          <p class="product-card__title" id="product-modal-title"></p>
-          <p class="product-card__price" id="product-modal-price"></p>
+        <div class="product-card__body">
+          <div class="product-card__header">
+            <p class="product-card__title" id="product-modal-title"></p>
+            <p class="product-card__price" id="product-modal-price"></p>
+          </div>
+          <div class="product-card__divider"></div>
+          <p class="product-card__description" id="product-modal-description"></p>
         </div>
-        <div class="product-card__divider"></div>
-        <p class="product-card__description" id="product-modal-description"></p>
         <button class="product-card__button" id="product-modal-close" type="button" aria-label="Закрыть">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-            <path d="M22.5 7.5L7.5 22.5M7.5 7.5L22.5 22.5" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6L18 18" stroke="#652a29" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
