@@ -323,6 +323,10 @@ img {
   padding: 5px;
 }
 
+.item-card[hidden] {
+  display: none !important;
+}
+
 .item-card img {
   width: 100%;
   aspect-ratio: 1,5 / 1;
