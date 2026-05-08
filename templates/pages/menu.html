@@ -322,11 +322,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Скролл к меню если пришли по якорю #menu
   if (window.location.hash === '#menu') {
     setTimeout(() => {
-      document.getElementById('menu').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 300);
+      const menuEl = document.getElementById('menu');
+      const headerHeight = document.querySelector('.header').offsetHeight;
+      const top = menuEl.getBoundingClientRect().top + window.scrollY - headerHeight - 10;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }, 400);
   }
 
   // Поиск
