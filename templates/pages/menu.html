@@ -224,6 +224,12 @@ document.addEventListener("DOMContentLoaded", function () {
   buttons.forEach((button) => {
     button.addEventListener("click", function () {
       activateCategory(this.dataset.category);
+      setTimeout(() => {
+        document.getElementById('menu').scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }, 50);
     });
   });
 
