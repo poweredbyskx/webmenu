@@ -54,14 +54,14 @@
           style="cursor: pointer;"
         />
       </a>
-      <a href="{% url 'menu' %}" class="btn-menu">меню</a>
+      <a href="{% url 'menu' %}#menu" class="btn-menu">меню</a>
     </div>
 
     <a href="{% url 'roasted' %}" class="hero-photo-wrap">
       <img src="{% static 'menu/images/456b6252e3e22b9fb65aef5c7cac015.jpg' %}"
            class="hero-photo"
            alt="Обжарка" />
-            <div class="hero-photo-overlay">
+      <div class="hero-photo-overlay">
         <p class="hero-photo-text">СОБСТВЕННАЯ<br>ОБЖАРКА<br>СПЕШАЛТИ<br>КОФЕ</p>
         <span class="hero-photo-btn">
           <span class="hero-photo-btn-icon">
@@ -224,12 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
   buttons.forEach((button) => {
     button.addEventListener("click", function () {
       activateCategory(this.dataset.category);
-      setTimeout(() => {
-        document.getElementById('menu').scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-      }, 50);
     });
   });
 
@@ -287,7 +281,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const dx = e.changedTouches[0].clientX - swipeTouchStartX;
       const dy = e.changedTouches[0].clientY - swipeTouchStartY;
 
-      // Только горизонтальный свайп
       if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
 
       const categoryList = Array.from(buttons).map(b => b.dataset.category);
@@ -324,6 +317,16 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => targetItem.classList.remove("item-card-highlight"), 2000);
       }, 200);
     }
+  }
+
+  // Скролл к меню если пришли по якорю #menu
+  if (window.location.hash === '#menu') {
+    setTimeout(() => {
+      document.getElementById('menu').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 300);
   }
 
   // Поиск
