@@ -54,7 +54,7 @@
           style="cursor: pointer;"
         />
       </a>
-      <a href="{% url 'menu' %}#menu" class="btn-menu">меню</a>
+      <a href="{% url 'menu' %}" class="btn-menu">меню</a>
     </div>
 
     <a href="{% url 'roasted' %}" class="hero-photo-wrap">
@@ -319,15 +319,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Скролл к меню если пришли по якорю #menu
-  if (window.location.hash === '#menu') {
-    setTimeout(() => {
-      const menuEl = document.getElementById('menu');
-      const headerHeight = document.querySelector('.header').offsetHeight;
-      const top = menuEl.getBoundingClientRect().top + window.scrollY - headerHeight - 10;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }, 400);
-  }
+  // Плавный скролл к меню при загрузке
+  setTimeout(() => {
+    const menuEl = document.getElementById('menu');
+    if (!menuEl) return;
+    const headerHeight = document.querySelector('.header').offsetHeight;
+    const targetY = menuEl.getBoundingClientRect().top + window.scrollY - headerHeight - 10;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+    }
+
+    const startY = window.scrollY;
+    const diff = targetY - startY;
+    let start = null;
+
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / 500, 1);
+      window.scrollTo(0, startY + diff * easeInOutCubic(progress));
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, 500);
 
   // Поиск
   if (input && results) {
