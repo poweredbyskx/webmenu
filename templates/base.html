@@ -5,7 +5,21 @@
 
 <head>
   <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">  <title>{% block title %}КАКАО{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>{% block title %}КАКАО{% endblock %}</title>
+
+  <!-- SEO -->
+  <meta name="description" content="КАКАО — кофе и завтраки в Ашхабаде. Меню, адреса и контакты.">
+  <meta name="keywords" content="кафе Ашхабад, завтраки Ашхабад, кофе Ашхабад, КАКАО кафе, меню кафе Туркменистан">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="КАКАО — Кофе и Завтраки">
+  <meta property="og:description" content="Кофейня в Ашхабаде. Завтраки, кофе, собственная обжарка спешалти кофе.">
+  <meta property="og:image" content="https://kakao.com.tm/static/favicon.png">
+  <meta property="og:url" content="https://kakao.com.tm">
+  <meta property="og:type" content="restaurant">
+
   <link rel="stylesheet" href="{% static 'menu/css/theme.css' %}">
   <link rel="stylesheet" href="{% static 'menu/css/style.css' %}">
   <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
