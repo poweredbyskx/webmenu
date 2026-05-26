@@ -24,6 +24,13 @@
   <link rel="stylesheet" href="{% static 'menu/css/style.css' %}">
   <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
   {% block extra_css %}{% endblock %}
+
+  <!-- Canonical и hreflang -->
+  <link rel="canonical" href="https://kakao.com.tm/ru{{ request.path|slice:'3:' }}">
+  <link rel="alternate" hreflang="ru" href="https://kakao.com.tm/ru{{ request.path|slice:'3:' }}">
+  <link rel="alternate" hreflang="en" href="https://kakao.com.tm/en{{ request.path|slice:'3:' }}">
+  <link rel="alternate" hreflang="tk" href="https://kakao.com.tm/tk{{ request.path|slice:'3:' }}">
+  <link rel="alternate" hreflang="x-default" href="https://kakao.com.tm/ru{{ request.path|slice:'3:' }}">
 </head>
 
 <body>
