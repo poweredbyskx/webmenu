@@ -12,7 +12,7 @@
 
 body {
   background: #f0f0f0;
-  font-family: sans-serif;
+  font-family: 'Basis Grotesque Pro', sans-serif;
   min-height: 100vh;
   line-height: 1.2;
 }
@@ -507,7 +507,7 @@ img {
    ===================== */
 
 .roasted-title-box {
-  border: 1.5px solid var(--primary);
+  border: 2px solid var(--primary);
   border-radius: 10px;
   padding: 16px;
 }
@@ -518,14 +518,15 @@ img {
   text-transform: uppercase;
   color: var(--primary);
   line-height: 1.3;
-  letter-spacing: 0.40em;
+  letter-spacing: 0.20em;
 }
 
 .roasted-desc {
   font-size: 16px;
   font-weight: 500;
   color: var(--primary);
-  line-height: 1.6;
+  line-height: 1.5;
+  padding: 0 10px;
 }
 
 .roasted-section-title {
@@ -542,7 +543,7 @@ img {
 }
 
 .roasted-card {
-  border: 1.5px solid var(--primary);
+  border: 2px solid var(--primary);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -893,36 +894,179 @@ img {
 }
 
 .info-section__header {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  padding: 16px;
 }
 
 .info-section__label {
-  font-size: 13px;
+  font-size: 22px;
   font-weight: 700;
-  color: var(--primary);
-  letter-spacing: 0.15em;
   text-transform: uppercase;
-  line-height: 1.4;
+  color: var(--primary);
+  line-height: 1.3;
+  letter-spacing: 0.2em;
 }
 
 .info-section__sub {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 700;
   color: var(--primary);
-  text-transform: capitalize;
+  margin-top: 4px;
 }
 
 .info-section__img {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 10px;
   object-fit: cover;
   display: block;
 }
 
+.info-section__img--bordered {
+  border: 2px solid var(--primary);
+}
+
 .info-section__text {
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--primary);
-  line-height: 1.7;
+  line-height: 1.5;
+  padding: 0 10px;
+}
+
+.info-section--knowledge {
+  border: 1.5px solid var(--primary);
+  border-radius: 10px;
+  padding: 16px;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-section--knowledge .info-section__header {
+  border: none;
+  padding: 0;
+}
+
+.info-section--knowledge .info-section__text {
+  padding: 0;
+}
+
+/* =====================
+   ROASTED PHOTOS GRID
+   ===================== */
+
+.roasted-photos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.roasted-photos-grid__img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+}
+.info-section__video-wrap {
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 3 / 4;
+}
+
+.info-section__video-wrap video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info-section--dark {
+  background: var(--primary);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.info-section--dark .info-section__label {
+  color: var(--card-yellow);
+}
+
+.info-section--dark .info-section__text {
+  color: var(--card-yellow);
+  padding: 0;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Light_Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Medium_Italic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Bold_Italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Basis Grotesque Pro';
+  src: url('/static/menu/fonts/Basis_Grotesque_Pro_Black_Italic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
 }
