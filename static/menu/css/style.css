@@ -527,6 +527,7 @@ img {
   color: var(--primary);
   line-height: 1.5;
   padding: 0 10px;
+  text-align: justify;
 }
 
 .roasted-section-title {
@@ -713,7 +714,7 @@ img {
 
 .site-footer {
   width: 100%;
-  max-width: 440px;
+  max-width: 440px; 
   margin: 0 auto;
   background: var(--primary);
 }
@@ -932,6 +933,7 @@ img {
   color: var(--primary);
   line-height: 1.5;
   padding: 0 10px;
+  text-align: justify;
 }
 
 .info-section--knowledge {
@@ -975,7 +977,7 @@ img {
   border-radius: 14px;
   overflow: hidden;
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 3 / 3;
 }
 
 .info-section__video-wrap video {
@@ -999,6 +1001,14 @@ img {
 .info-section--dark .info-section__text {
   color: var(--card-yellow);
   padding: 0;
+}
+
+.info-section__divider {
+  text-align: center;
+  color: var(--primary);
+  opacity: 0,8;
+  font-size: 30px;
+  letter-spacing: 0.5em;
 }
 
 @font-face {
