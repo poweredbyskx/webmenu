@@ -37,7 +37,7 @@
       <div class="search-results"></div>
     </div>
 
-    <a href="https://instagram.com/kakao.breakfast/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Instagram">
+    <a href="https://instagram.com/kakao.breakfast/" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Instagram" onclick="track('instagram_click')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <rect x="2" y="2" width="20" height="20" rx="5" stroke="#652a29" stroke-width="2"/>
         <circle cx="12" cy="12" r="4" stroke="#652a29" stroke-width="2"/>
@@ -79,7 +79,7 @@
 
   <div class="actions">
 
-    <a href="tel:+99364359786" class="action-btn">
+    <a href="tel:+99364359786" class="action-btn" onclick="track('phone_call',{source:'home'})">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M22 16.9V19.9C22 20.5 21.7 21.1 21.2 21.4C20.7 21.8 20.1 21.9 19.5 21.8C16.4 21.3 13.4 20.2 10.7 18.6C8.2 17.1 6 14.9 4.5 12.4C2.8 9.7 1.8 6.6 1.3 3.5C1.2 2.9 1.4 2.3 1.7 1.8C2.1 1.3 2.6 1 3.2 1H6.2C7.2 1 8 1.7 8.2 2.7C8.4 3.7 8.7 4.6 9.1 5.6C9.4 6.2 9.2 6.9 8.7 7.4L7.4 8.7C8.8 11.3 10.7 13.2 13.3 14.6L14.6 13.3C15.1 12.8 15.8 12.6 16.4 12.9C17.3 13.3 18.3 13.6 19.3 13.8C20.3 14 21 14.9 22 16.9Z" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M16 2L22 8M22 2L16 8" stroke="#652a29" stroke-width="2" stroke-linecap="round"/>
@@ -146,9 +146,12 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
+        track('search_used', {query: q, results_count: data.length});
+
         results.innerHTML = data.map(item => `
           <a class="search-item"
-             href="${menuUrl}?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}">
+             href="${menuUrl}?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}"
+             data-track-item="${escapeHtml(item.name)}" data-track-category="${escapeHtml(item.category || '')}">
             ${item.image
               ? `<img src="${item.image}" alt="${escapeHtml(item.name)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">`
               : ""}
@@ -160,6 +163,12 @@ document.addEventListener("DOMContentLoaded", function () {
         `).join("");
 
         results.style.display = "flex";
+
+        results.querySelectorAll('a[data-track-item]').forEach(function(el) {
+          el.addEventListener('click', function() {
+            track('search_result_click', {item: el.dataset.trackItem, category: el.dataset.trackCategory, source: 'home'});
+          }, {once: true});
+        });
 
       } catch (error) {
         results.innerHTML = `<div class="search-item">Ошибка поиска</div>`;
@@ -182,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function openMaps(e) {
     e.preventDefault();
+    track('map_click', {source: 'home'});
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     if (isIOS) {
         window.location.href = 'https://maps.apple.com/?ll=37.897551,58.394592&q=Kakao.breakfast';
