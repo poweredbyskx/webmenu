@@ -43,6 +43,8 @@ def build_search_queryset(query: str):
     )
 
 
+DRINK_CATEGORY_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
+
 class HomeView(TemplateView):
     template_name = "pages/home.html"
 
@@ -52,12 +54,30 @@ class HomeView(TemplateView):
         categories = Category.objects.prefetch_related("items").all()
         first_category = categories.first()
 
-        ctx["new_items"] = (
-            Item.objects.filter(is_new=True, is_active=True).select_related("category")[:12]
+        seasonal_food = list(
+            Item.objects.filter(is_seasonal=True, is_active=True)
+            .exclude(category__slug__in=DRINK_CATEGORY_SLUGS)
+            .select_related("category")[:6]
         )
-        ctx["seasonal_items"] = (
-            Item.objects.filter(is_seasonal=True, is_active=True).select_related("category")[:12]
+        seasonal_drinks = list(
+            Item.objects.filter(is_seasonal=True, is_active=True)
+            .filter(category__slug__in=DRINK_CATEGORY_SLUGS)
+            .select_related("category")[:6]
         )
+        ctx["seasonal_items"] = seasonal_food + seasonal_drinks
+
+        new_food = list(
+            Item.objects.filter(is_new=True, is_active=True)
+            .exclude(category__slug__in=DRINK_CATEGORY_SLUGS)
+            .select_related("category")[:6]
+        )
+        new_drinks = list(
+            Item.objects.filter(is_new=True, is_active=True)
+            .filter(category__slug__in=DRINK_CATEGORY_SLUGS)
+            .select_related("category")[:6]
+        )
+        ctx["new_items"] = new_food + new_drinks
+
         ctx["categories"] = categories
         ctx["menu_items"] = (
             first_category.items.filter(is_active=True) if first_category else Item.objects.none()
