@@ -51,9 +51,15 @@
           src="{% static 'menu/images/Primary_color_LogoPrimary Logo_descriptor@3x.png' %}"
           class="hero-logo"
           alt="КАКАО Кофе и Завтраки"
-          style="cursor: pointer;"
         />
       </a>
+            <div class="cafe-info">
+  <div class="open-status" id="cafe-status"></div>
+  <div class="work-hours">
+    <span>ПН – СБ 8:00 – 23:00</span>
+    <span>ВС 9:00 – 23:00</span>
+  </div>
+</div>
       <a href="{% url 'menu' %}" class="btn-menu">меню</a>
     </div>
 
@@ -408,6 +414,33 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+function updateCafeStatus() {
+  const now = new Date();
+  // Время в Ашхабаде UTC+5
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const ashgabat = new Date(utc + 5 * 3600000);
+
+  const day = ashgabat.getDay(); // 0=вс, 1=пн ... 6=сб
+  const hours = ashgabat.getHours();
+  const minutes = ashgabat.getMinutes();
+  const time = hours * 60 + minutes;
+
+  // ПН-СБ: 8:00-23:00, ВС: 9:00-23:00
+  const open = (day >= 1 && day <= 6) ? 8 * 60 : 9 * 60;
+  const close = 23 * 60;
+
+  const isOpen = time >= open && time < close;
+  const el = document.getElementById('cafe-status');
+  if (!el) return;
+
+  el.innerHTML = isOpen
+    ? `<span class="status-open">ОТКРЫТО <span class="status-dot"></span></span>`
+    : `<span class="status-closed">ЗАКРЫТО <span class="status-dot"></span></span>`;
+}
+
+updateCafeStatus();
+setInterval(updateCafeStatus, 60000);
 </script>
 
 {% endblock %}

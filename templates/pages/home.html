@@ -55,6 +55,13 @@
              class="hero-logo"
              alt="КАКАО Кофе и Завтраки" />
       </a>
+      <div class="cafe-info">
+        <div class="open-status" id="cafe-status"></div>
+        <div class="work-hours">
+          <span>ПН – СБ 8:00 – 23:00</span>
+          <span>ВС 9:00 – 23:00</span>
+        </div>
+      </div>
       <a href="{% url 'menu' %}" class="btn-menu">меню</a>
     </div>
 
@@ -97,8 +104,84 @@
 
   </div>
 
-</div>
+  <!-- Сезонные новинки -->
+  {% if seasonal_items %}
+  <section class="home-section">
+    <h2 class="home-section__title">#Сезонные новинки</h2>
+    <div class="home-carousel" id="carousel-seasonal">
+      {% for item in seasonal_items %}
+      <div class="item-card home-carousel__card"
+        data-name="{{ item.name }}"
+        data-price="{{ item.price|floatformat:'-2' }}"
+        data-description="{{ item.description }}"
+        data-image="{% if item.image %}{{ item.image.url }}{% endif %}"
+        data-category="{{ item.category.slug }}">
+        {% if item.image %}
+        <img src="{{ item.thumb_300.url }}" alt="{{ item.name }}">
+        {% endif %}
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-price">{{ item.price|floatformat:"-2" }}м</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 
+  <!-- Популярные позиции -->
+  {% if new_items %}
+  <section class="home-section">
+    <h2 class="home-section__title">#Популярные позиции</h2>
+    <div class="home-carousel" id="carousel-popular">
+      {% for item in new_items %}
+      <div class="item-card home-carousel__card"
+        data-name="{{ item.name }}"
+        data-price="{{ item.price|floatformat:'-2' }}"
+        data-description="{{ item.description }}"
+        data-image="{% if item.image %}{{ item.image.url }}{% endif %}"
+        data-category="{{ item.category.slug }}">
+        {% if item.image %}
+        <img src="{{ item.thumb_300.url }}" alt="{{ item.name }}">
+        {% endif %}
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-price">{{ item.price|floatformat:"-2" }}м</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Фото интерьера -->
+  <div class="home-interior">
+    <img src="{% static 'menu/images/interior.jpg' %}" alt="Интерьер КАКАО" class="home-interior__img">
+  </div>
+
+  <!-- Модальное окно -->
+  <div id="product-modal-overlay" class="product-modal-overlay" aria-hidden="true">
+    <div class="product-modal-content">
+      <div class="product-card" role="dialog" aria-modal="true">
+        <img id="product-modal-image" src="" alt="" class="product-card__image"/>
+        <div class="product-card__body">
+          <div class="product-card__header">
+            <p class="product-card__title" id="product-modal-title"></p>
+            <p class="product-card__price" id="product-modal-price"></p>
+          </div>
+          <div class="product-card__divider"></div>
+          <p class="product-card__description" id="product-modal-description"></p>
+        </div>
+        <button class="product-card__button" id="product-modal-close" type="button">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6L18 18" stroke="#652a29" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -126,28 +209,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
   input.addEventListener("input", function () {
     const q = input.value.trim();
-
     clearTimeout(timer);
-
     if (!q) {
       results.innerHTML = "";
       results.style.display = "none";
       return;
     }
-
     timer = setTimeout(async function () {
       try {
         const response = await fetch(`${searchUrl}?q=${encodeURIComponent(q)}`);
         const data = await response.json();
-
         if (!Array.isArray(data) || data.length === 0) {
           results.innerHTML = `<div class="search-item">Ничего не найдено</div>`;
           results.style.display = "flex";
           return;
         }
-
         track('search_used', {query: q, results_count: data.length});
-
         results.innerHTML = data.map(item => `
           <a class="search-item"
              href="${menuUrl}?category=${encodeURIComponent(item.category_slug)}&item=${encodeURIComponent(item.item_slug)}"
@@ -161,15 +238,12 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </a>
         `).join("");
-
         results.style.display = "flex";
-
         results.querySelectorAll('a[data-track-item]').forEach(function(el) {
           el.addEventListener('click', function() {
             track('search_result_click', {item: el.dataset.trackItem, category: el.dataset.trackCategory, source: 'home'});
           }, {once: true});
         });
-
       } catch (error) {
         results.innerHTML = `<div class="search-item">Ошибка поиска</div>`;
         results.style.display = "flex";
@@ -188,16 +262,194 @@ document.addEventListener("DOMContentLoaded", function () {
       results.style.display = "flex";
     }
   });
-});
-function openMaps(e) {
-    e.preventDefault();
-    track('map_click', {source: 'home'});
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS) {
-        window.location.href = 'https://maps.apple.com/?ll=37.897551,58.394592&q=Kakao.breakfast';
+
+  // Модальное окно
+  const modalOverlay = document.getElementById("product-modal-overlay");
+  const modalImage = document.getElementById("product-modal-image");
+  const modalTitle = document.getElementById("product-modal-title");
+  const modalPrice = document.getElementById("product-modal-price");
+  const modalDescription = document.getElementById("product-modal-description");
+  const modalCloseButton = document.getElementById("product-modal-close");
+
+  function openProductModal(itemEl) {
+    modalTitle.textContent = itemEl.dataset.name || "";
+    modalPrice.textContent = itemEl.dataset.price || "";
+    modalDescription.textContent = itemEl.dataset.description || "";
+    const imageUrl = itemEl.dataset.image || "";
+    if (imageUrl) {
+      modalImage.src = imageUrl;
+      modalImage.style.display = "block";
     } else {
-        window.location.href = 'https://maps.app.goo.gl/XEjLdNFKJqW7418j9';
+      modalImage.style.display = "none";
     }
+    modalOverlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeProductModal() {
+    modalOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  if (modalCloseButton) modalCloseButton.addEventListener("click", closeProductModal);
+  if (modalOverlay) modalOverlay.addEventListener("click", function(e) {
+    if (e.target === modalOverlay) closeProductModal();
+  });
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") closeProductModal();
+  });
+
+  // Карусель
+  function initCarousel(el) {
+    if (!el) return;
+
+    const cards = Array.from(el.children);
+    cards.forEach(function(card) {
+      el.appendChild(card.cloneNode(true));
+    });
+
+    el.querySelectorAll(".home-carousel__card").forEach(function(card) {
+      card.addEventListener("click", function() { openProductModal(this); });
+    });
+
+    let isDragging = false;
+    let startX = 0;
+    let scrollStart = 0;
+    let velocity = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let autoActive = true;
+    let autoSpeed = 1;
+    let frameCount = 0;
+    const scrollEveryN = 1; // скроллить каждые 3 кадра
+
+    function autoScroll() {
+      if (autoActive && !isDragging) {
+        frameCount++;
+        if (frameCount >= scrollEveryN) {
+          el.scrollLeft += autoSpeed;
+          const half = el.scrollWidth / 2;
+          if (el.scrollLeft >= half) el.scrollLeft -= half;
+          frameCount = 0;
+        }
+      }
+      requestAnimationFrame(autoScroll);
+    }
+    requestAnimationFrame(autoScroll);
+
+    function loopScroll() {
+      const half = el.scrollWidth / 2;
+      if (el.scrollLeft >= half) el.scrollLeft -= half;
+      if (el.scrollLeft < 0) el.scrollLeft += half;
+    }
+
+    // Touch
+    el.addEventListener("touchstart", function(e) {
+      isDragging = true;
+      autoActive = false;
+      startX = e.touches[0].pageX;
+      scrollStart = el.scrollLeft;
+      velocity = 0;
+      lastX = startX;
+      lastTime = Date.now();
+    }, { passive: true });
+
+    el.addEventListener("touchmove", function(e) {
+      if (!isDragging) return;
+      const x = e.touches[0].pageX;
+      const now = Date.now();
+      velocity = (lastX - x) / (now - lastTime + 1);
+      lastX = x;
+      lastTime = now;
+      el.scrollLeft = scrollStart + (startX - x);
+      loopScroll();
+    }, { passive: true });
+
+    el.addEventListener("touchend", function() {
+      isDragging = false;
+      let v = velocity * 15;
+      function inertia() {
+        if (Math.abs(v) < 0.1) { autoActive = true; return; }
+        el.scrollLeft += v;
+        v *= 0.92;
+        loopScroll();
+        requestAnimationFrame(inertia);
+      }
+      requestAnimationFrame(inertia);
+    }, { passive: true });
+
+    // Mouse
+    el.addEventListener("mousedown", function(e) {
+      isDragging = true;
+      autoActive = false;
+      startX = e.pageX;
+      scrollStart = el.scrollLeft;
+      velocity = 0;
+      lastX = startX;
+      lastTime = Date.now();
+      el.style.cursor = "grabbing";
+    });
+
+    window.addEventListener("mousemove", function(e) {
+      if (!isDragging) return;
+      const now = Date.now();
+      velocity = (lastX - e.pageX) / (now - lastTime + 1);
+      lastX = e.pageX;
+      lastTime = now;
+      el.scrollLeft = scrollStart + (startX - e.pageX);
+      loopScroll();
+    });
+
+    window.addEventListener("mouseup", function() {
+      if (!isDragging) return;
+      isDragging = false;
+      el.style.cursor = "grab";
+      let v = velocity * 15;
+      function inertia() {
+        if (Math.abs(v) < 0.1) { autoActive = true; return; }
+        el.scrollLeft += v;
+        v *= 0.92;
+        loopScroll();
+        requestAnimationFrame(inertia);
+      }
+      requestAnimationFrame(inertia);
+    });
+  }
+
+  initCarousel(document.getElementById("carousel-seasonal"));
+  initCarousel(document.getElementById("carousel-popular"));
+});
+
+function openMaps(e) {
+  e.preventDefault();
+  track('map_click', {source: 'home'});
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    window.location.href = 'https://maps.apple.com/?ll=37.897551,58.394592&q=Kakao.breakfast';
+  } else {
+    window.location.href = 'https://maps.app.goo.gl/XEjLdNFKJqW7418j9';
+  }
 }
+
+function updateCafeStatus() {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const ashgabat = new Date(utc + 5 * 3600000);
+  const day = ashgabat.getDay();
+  const hours = ashgabat.getHours();
+  const minutes = ashgabat.getMinutes();
+  const time = hours * 60 + minutes;
+  const open = (day >= 1 && day <= 6) ? 8 * 60 : 9 * 60;
+  const close = 23 * 60;
+  const isOpen = time >= open && time < close;
+  const el = document.getElementById('cafe-status');
+  if (!el) return;
+  el.innerHTML = isOpen
+    ? `<span class="status-open">ОТКРЫТО <span class="status-dot"></span></span>`
+    : `<span class="status-closed">ЗАКРЫТО <span class="status-dot"></span></span>`;
+}
+
+updateCafeStatus();
+setInterval(updateCafeStatus, 60000);
 </script>
 {% endblock %}
