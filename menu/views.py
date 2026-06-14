@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, TemplateView
 
 from .models import Category, Item, RoastedCoffee
-from itertools import zip_longest
+
 
 logger = logging.getLogger(__name__)
 
