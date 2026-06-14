@@ -1103,8 +1103,14 @@ img {
   display: none;
 }
 
-.home-carousel__card {
+.home-carousel__pair {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   flex: 0 0 calc(50% - 7px);
+}
+
+.home-carousel__pair .item-card {
   cursor: pointer;
 }
 
@@ -1116,6 +1122,18 @@ img {
 
 .home-interior__img {
   width: 100%;
-  height: 100%;
+  height: 300%;
   object-fit: cover;
+}
+
+.home-carousels-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home-carousel__card {
+  flex: 0 0 calc(50% - 7px);
+  width: calc(50% - 7px);
+  cursor: pointer;
 }
