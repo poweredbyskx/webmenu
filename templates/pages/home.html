@@ -95,6 +95,8 @@
       <span class="action-btn-text">НАЙТИ НА КАРТЕ</span>
     </a>
   </div>
+  <div class="home-brand-bg">
+    <img src="{% static 'menu/images/color_logo.png' %}" class="home-brand-bg__logo" alt="">
 
   <!-- Сезонные новинки -->
   {% if seasonal_food or seasonal_drinks %}
@@ -185,10 +187,14 @@
     </div>
   </section>
   {% endif %}
+  </div>
 
   <!-- Фото интерьера -->
   <div class="home-interior">
-    <video src="{% static 'menu/videos/1.webm' %}" alt="Интерьер КАКАО" class="home-interior__img">
+    <video src="{% static 'menu/videos/1.webm' %}" 
+          class="home-interior__img"
+          autoplay loop muted playsinline>
+    </video>
   </div>
 
   <!-- Модальное окно -->

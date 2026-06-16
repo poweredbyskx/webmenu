@@ -1083,10 +1083,11 @@ img {
 
 
 .home-section__title {
-  font-size: 20px;
+  font-size: 35px;
   font-weight: 700;
   color: var(--primary);
-  margin-bottom: 6px;
+  margin-bottom: 20px;
+  padding-left: 20px;
 }
 
 .home-carousel {
@@ -1117,12 +1118,12 @@ img {
 .home-interior {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  height: 220px;
+  height: 700px;
 }
 
 .home-interior__img {
   width: 100%;
-  height: 300%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -1136,4 +1137,33 @@ img {
   flex: 0 0 calc(50% - 7px);
   width: calc(50% - 7px);
   cursor: pointer;
+}
+
+
+
+.home-brand-bg {
+  position: relative;
+  margin: 0 -16px;
+  padding-top: 20px; 
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow: hidden;
+}
+
+.home-brand-bg__logo {
+  position: absolute;
+  top: 81%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  width: 835%;
+  max-width: none;
+  pointer-events: none;
+  opacity: 1;
+  z-index: 0;
+}
+
+.home-brand-bg .home-section {
+  position: relative;
+  z-index: 1;
 }
