@@ -356,15 +356,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     requestAnimationFrame(autoScroll);
 
+    let touchStartY = 0;
+    let isHorizontalSwipe = null;
+
     el.addEventListener("touchstart", function(e) {
       isDragging = true; autoActive = false;
-      startX = e.touches[0].pageX; scrollStart = el.scrollLeft;
+      startX = e.touches[0].pageX;
+      touchStartY = e.touches[0].pageY;
+      scrollStart = el.scrollLeft;
       velocity = 0; lastX = startX; lastTime = Date.now();
+      isHorizontalSwipe = null;
     }, { passive: true });
 
     el.addEventListener("touchmove", function(e) {
       if (!isDragging) return;
-      const x = e.touches[0].pageX; const now = Date.now();
+      const x = e.touches[0].pageX;
+      const y = e.touches[0].pageY;
+
+      if (isHorizontalSwipe === null) {
+        const dx = Math.abs(x - startX);
+        const dy = Math.abs(y - touchStartY);
+        if (dx < 5 && dy < 5) return;
+        isHorizontalSwipe = dx > dy;
+      }
+
+      if (!isHorizontalSwipe) {
+        isDragging = false;
+        autoActive = true;
+        return;
+      }
+
+      const now = Date.now();
       velocity = (lastX - x) / (now - lastTime + 1);
       lastX = x; lastTime = now;
       el.scrollLeft = scrollStart + (startX - x);
