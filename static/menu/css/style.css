@@ -29,7 +29,7 @@ img {
 
 .page {
   width: 100%;
-  max-width: 440px;
+  max-width: 450px;
   margin: 0 auto;
   background: var(--white);
   display: flex;
@@ -329,7 +329,6 @@ img {
 
 .item-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
@@ -1154,18 +1153,21 @@ img {
   flex-direction: column;
   gap: 30px;
   min-height: 1200px;
+  overflow-x: hidden;  /* обрезаем только по горизонтали */
+  overflow-y: hidden; /* по вертикали не обрезаем */
 }
 
 .home-brand-bg__logo {
   position: absolute;
-  top: 86%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(90deg);
-  width: 835%;
+  top: -5%;
+  left: 51%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: auto;
   max-width: none;
   pointer-events: none;
   opacity: 1;
-  z-index: 0;
+  z-index: 1;
 }
 
 .home-brand-bg .home-section {
@@ -1176,7 +1178,7 @@ img {
 
 .home-text-block {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   border: 1px solid var(--primary);
   border-radius: 10px;
   padding: 16px;
@@ -1185,19 +1187,11 @@ img {
 
 .home-text-block {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   border: 1px solid var(--primary);
   border-radius: 10px;
   padding: 16px;
   background: rgba(255, 255, 255, 0); /* прозрачность фона: меняй 0.7 (0 = полностью прозрачный, 1 = непрозрачный) */
   margin-top: 20px;    /* отступ сверху от предыдущего блока */
   margin-bottom: 20px; /* отступ снизу до следующего блока */
-}
-
-
-
-
-html, body {
-  overflow-x: hidden;
-  width: 100%;
 }
