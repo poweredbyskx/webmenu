@@ -1193,3 +1193,11 @@ img {
   margin-top: 20px;    /* отступ сверху от предыдущего блока */
   margin-bottom: 20px; /* отступ снизу до следующего блока */
 }
+
+
+
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
