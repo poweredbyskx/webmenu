@@ -329,7 +329,7 @@ img {
 
 .item-card img {
   width: 100%;
-  aspect-ratio: 1,5 / 1;
+  aspect-ratio: 1 / 1;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
@@ -717,6 +717,8 @@ img {
   max-width: 440px; 
   margin: 0 auto;
   background: var(--primary);
+  position: relative;
+  z-index: 2;
 }
 
 .site-footer__inner {
@@ -1054,7 +1056,7 @@ img {
 .status-open .status-dot {
   background: #2ecc71;
   box-shadow: 0 0 0 2px rgba(46,204,113,0.3);
-  animation: pulse 2s infinite;
+  animation: pulse 3s infinite;
 }
 .status-closed .status-dot {
   background: #ff0000;
@@ -1076,7 +1078,7 @@ img {
   flex-direction: column;
   align-items: center;
   gap: 1px;
-  font-size: 8px;
+  font-size: 7px;
   letter-spacing: 0.05em;
   color: #fff3bd;
 }
@@ -1118,7 +1120,10 @@ img {
 .home-interior {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  height: 700px;
+  height: 750px;
+  margin-top: 15px;
+  z-index: 2;
+
 }
 
 .home-interior__img {
@@ -1144,16 +1149,16 @@ img {
 .home-brand-bg {
   position: relative;
   margin: 0 -16px;
-  padding-top: 20px; 
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 30px;
-  overflow: hidden;
+  min-height: 1200px;
 }
 
 .home-brand-bg__logo {
   position: absolute;
-  top: 81%;
+  top: 86%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(90deg);
   width: 835%;
@@ -1166,4 +1171,25 @@ img {
 .home-brand-bg .home-section {
   position: relative;
   z-index: 1;
+}
+
+
+.home-text-block {
+  position: relative;
+  z-index: 2;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--white);
+}
+
+.home-text-block {
+  position: relative;
+  z-index: 2;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0); /* прозрачность фона: меняй 0.7 (0 = полностью прозрачный, 1 = непрозрачный) */
+  margin-top: 20px;    /* отступ сверху от предыдущего блока */
+  margin-bottom: 20px; /* отступ снизу до следующего блока */
 }
