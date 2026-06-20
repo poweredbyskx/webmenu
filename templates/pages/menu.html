@@ -115,7 +115,7 @@
     <div class="items-grid" id="menu-items">
       {% for item in items %}
       <div
-        class="item-card"
+        class="item-card{% if item.category.slug == 'non_coffee' or item.category.slug == 'ice_coffee' or item.category.slug == 'cocktails' %} item-card--drink{% endif %}"
         data-category="{{ item.category.slug }}"
         data-item="{{ item.slug }}"
         data-name="{{ item.name }}"

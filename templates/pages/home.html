@@ -106,7 +106,7 @@
       {% if seasonal_food %}
       <div class="home-carousel" id="carousel-seasonal-food">
         {% for item in seasonal_food %}
-        <div class="item-card home-carousel__card"
+        <div class="item-card home-carousel__card{% if item.category.slug == 'non_coffee' or item.category.slug == 'ice_coffee' or item.category.slug == 'cocktails' %} item-card--drink{% endif %}"
           data-name="{{ item.name }}"
           data-price="{{ item.price|floatformat:'-2' }}"
           data-description="{{ item.description }}"
@@ -124,7 +124,7 @@
       {% if seasonal_drinks %}
       <div class="home-carousel" id="carousel-seasonal-drinks">
         {% for item in seasonal_drinks %}
-        <div class="item-card home-carousel__card"
+        <div class="item-card home-carousel__card{% if item.category.slug == 'non_coffee' or item.category.slug == 'ice_coffee' or item.category.slug == 'cocktails' %} item-card--drink{% endif %}"
           data-name="{{ item.name }}"
           data-price="{{ item.price|floatformat:'-2' }}"
           data-description="{{ item.description }}"
@@ -151,7 +151,7 @@
       {% if new_food %}
       <div class="home-carousel" id="carousel-popular-food">
         {% for item in new_food %}
-        <div class="item-card home-carousel__card"
+        <div class="item-card home-carousel__card{% if item.category.slug == 'non_coffee' or item.category.slug == 'ice_coffee' or item.category.slug == 'cocktails' %} item-card--drink{% endif %}"
           data-name="{{ item.name }}"
           data-price="{{ item.price|floatformat:'-2' }}"
           data-description="{{ item.description }}"
@@ -169,7 +169,7 @@
       {% if new_drinks %}
       <div class="home-carousel" id="carousel-popular-drinks">
         {% for item in new_drinks %}
-        <div class="item-card home-carousel__card"
+        <div class="item-card home-carousel__card{% if item.category.slug == 'non_coffee' or item.category.slug == 'ice_coffee' or item.category.slug == 'cocktails' %} item-card--drink{% endif %}"
           data-name="{{ item.name }}"
           data-price="{{ item.price|floatformat:'-2' }}"
           data-description="{{ item.description }}"
