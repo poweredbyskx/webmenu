@@ -1122,7 +1122,6 @@ img {
   height: 750px;
   margin-top: 15px;
   z-index: 2;
-
 }
 
 .home-interior__img {
@@ -1152,14 +1151,14 @@ img {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  min-height: 1200px;
+  min-height: 2200px;
   overflow-x: hidden;  /* обрезаем только по горизонтали */
   overflow-y: hidden; /* по вертикали не обрезаем */
 }
 
 .home-brand-bg__logo {
   position: absolute;
-  top: -5%;
+  top: -3.5%;
   left: 51%;
   transform: translateX(-50%);
   width: 1000px;
