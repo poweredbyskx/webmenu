@@ -1158,10 +1158,10 @@ img {
 
 .home-brand-bg__logo {
   position: absolute;
-  top: -3.5%;
+  top: -3%;
   left: 51%;
   transform: translateX(-50%);
-  width: 1000px;
+  width: 900px;
   height: auto;
   max-width: none;
   pointer-events: none;
