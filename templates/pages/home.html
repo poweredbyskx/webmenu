@@ -304,13 +304,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalDescription = document.getElementById("product-modal-description");
   const modalCloseButton = document.getElementById("product-modal-close");
 
-  function openProductModal(itemEl) {
+function openProductModal(itemEl) {
     modalTitle.textContent = itemEl.dataset.name || "";
     modalPrice.textContent = itemEl.dataset.price || "";
     modalDescription.textContent = itemEl.dataset.description || "";
     const imageUrl = itemEl.dataset.image || "";
     if (imageUrl) { modalImage.src = imageUrl; modalImage.style.display = "block"; }
     else { modalImage.style.display = "none"; }
+    const category = itemEl.dataset.category || "";
+    const isDrink = ['non_coffee', 'ice_coffee', 'cocktails'].includes(category);
+    const productCard = modalOverlay.querySelector('.product-card');
+    if (productCard) productCard.classList.toggle('product-card--drink', isDrink);
     modalOverlay.classList.add("open");
     document.body.style.overflow = "hidden";
   }

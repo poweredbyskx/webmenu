@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalDescription = document.getElementById("product-modal-description");
   const modalCloseButton = document.getElementById("product-modal-close");
 
-  // Модальное окно
+// Модальное окно
   function openProductModal(itemEl) {
     const name = itemEl.dataset.name || "";
     const price = itemEl.dataset.price || "";
@@ -192,6 +192,9 @@ document.addEventListener("DOMContentLoaded", function () {
       modalImage.alt = "";
       modalImage.style.display = "none";
     }
+    const isDrink = ['non_coffee', 'ice_coffee', 'cocktails'].includes(category);
+    const productCard = modalOverlay.querySelector('.product-card');
+    productCard.classList.toggle('product-card--drink', isDrink);
     modalOverlay.classList.add("open");
     modalOverlay.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";

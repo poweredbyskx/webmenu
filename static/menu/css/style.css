@@ -428,11 +428,15 @@ img {
 .product-card__image {
   width: calc(100% - 24px);
   margin: 12px 12px 0;
-  height: 100%;
+  aspect-ratio: 4 / 2.5;
   object-fit: cover;
   border-radius: 20px;
   flex-shrink: 0;
   display: block;
+}
+
+.product-card--drink .product-card__image {
+  aspect-ratio: 3 / 4;
 }
 
 .product-card__body {
