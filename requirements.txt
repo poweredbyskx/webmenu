@@ -10,7 +10,7 @@ gunicorn==25.3.0
 packaging==26.0
 pilkit==3.0
 pillow==12.2.0
-psycopg==3.3.3
+psycopg==3.3.4
 psycopg-binary==3.3.3
 psycopg2-binary==2.9.11
 python-slugify==8.0.4
