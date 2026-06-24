@@ -1128,7 +1128,11 @@ img {
   border-radius: var(--radius-lg);
   overflow: hidden;
   height: 750px;
-  margin-top: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  margin-left: 16px;    /* отступ слева */
+  margin-right: 16px;   /* отступ справа */
+  position: relative;
   z-index: 2;
 }
 
@@ -1136,6 +1140,7 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: var(--radius-lg);
 }
 
 .home-carousels-wrap {
@@ -1184,21 +1189,35 @@ img {
 
 
 .home-text-block {
+  font-size: 35px;
+  font-weight: 700;
+  color: var(--primary);  /* цвет текста — меняй здесь */
+  line-height: 1.5;
+  text-align: justify;
   position: relative;
   z-index: 1;
-  border: 1px solid var(--primary);
   border-radius: 10px;
   padding: 16px;
+  margin-left: 16px;    /* отступ слева */
+  margin-right: 16px;   /* отступ справа */
   background: var(--white);
+}
+
+.home-text-block__text2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--primary);  /* цвет текста — меняй здесь */
+  line-height: 1.5;
+  text-align: justify;
+  position: relative;
 }
 
 .home-text-block {
   position: relative;
   z-index: 1;
-  border: 1px solid var(--primary);
   border-radius: 10px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0); /* прозрачность фона: меняй 0.7 (0 = полностью прозрачный, 1 = непрозрачный) */
+  background: rgba(204, 233, 241, 0.5); /* прозрачность фона: меняй 0.7 (0 = полностью прозрачный, 1 = непрозрачный) */
   margin-top: 20px;    /* отступ сверху от предыдущего блока */
   margin-bottom: 20px; /* отступ снизу до следующего блока */
 }
