@@ -52,7 +52,10 @@
         {% endif %}
         <div class="roasted-card__body">
           <div class="roasted-card__top">
-            <span class="roasted-card__origin">{{ coffee.origin }} {{ coffee.region }}</span>
+            <div class="roasted-card__titles">
+              <span class="roasted-card__name">{{ coffee.name }}</span>
+              <span class="roasted-card__region">{{ coffee.region }}</span>
+            </div>
             <span class="roasted-card__weight">{{ coffee.weight }}</span>
           </div>
           {% if coffee.flavor_notes %}

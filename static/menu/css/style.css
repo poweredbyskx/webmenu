@@ -154,7 +154,7 @@ img {
 }
 
 .hero-brand {
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   background: var(--primary);
   display: flex;
   flex-direction: column;
@@ -171,7 +171,7 @@ img {
 }
 
 .hero-photo-wrap {
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   overflow: hidden;
   text-decoration: none;
 }
@@ -198,7 +198,7 @@ img {
   color: var(--primary);
   text-align: center;
   text-decoration: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
   transition: transform 0.3s;
   flex-shrink: 0;
 }
@@ -557,6 +557,7 @@ img {
   display: flex;
   gap: 12px;
   padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
 .roasted-card__img {
@@ -586,13 +587,6 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-}
-
-.roasted-card__origin {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary);
-  text-transform: uppercase;
 }
 
 .roasted-card__weight {
@@ -641,6 +635,27 @@ img {
   text-align: center;
   padding: 20px 0;
 }
+
+.roasted-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.roasted-card__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+}
+
+.roasted-card__region {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary);
+  opacity: 0.85;
+}
+
 
 /* =====================
    REMOVE FOCUS OUTLINE
@@ -1092,7 +1107,7 @@ img {
 
 
 .home-section__title {
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--primary);
   margin-bottom: 20px;
@@ -1189,7 +1204,7 @@ img {
 
 
 .home-text-block {
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--primary);  /* цвет текста — меняй здесь */
   line-height: 1.5;
