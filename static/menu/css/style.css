@@ -1142,7 +1142,7 @@ img {
 .home-interior {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  height: 750px;
+  height: 170vw;
   margin-top: 25px;
   margin-bottom: 25px;
   margin-left: 16px;    /* отступ слева */
@@ -1179,7 +1179,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  min-height: 2200px;
+  min-height: 500vw;
   overflow-x: hidden;  /* обрезаем только по горизонтали */
   overflow-y: hidden; /* по вертикали не обрезаем */
 }
@@ -1189,7 +1189,7 @@ img {
   top: -3%;
   left: 51%;
   transform: translateX(-50%);
-  width: 850px;
+  width: 193vw;
   height: auto;
   max-width: none;
   pointer-events: none;
