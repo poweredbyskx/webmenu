@@ -20,6 +20,71 @@
   <meta property="og:url" content="https://kakao.com.tm">
   <meta property="og:type" content="restaurant">
 
+  <!-- Schema.org: структурированные данные для расширенных сниппетов в Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CafeOrCoffeeShop",
+        "name": "КАКАО",
+        "image": "https://kakao.com.tm/static/favicon.png",
+        "url": "https://kakao.com.tm",
+        "telephone": "+99364359786",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Мир 4, Parahat базар",
+          "addressLocality": "Ашхабад",
+          "addressCountry": "TM"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "08:00",
+            "closes": "23:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Sunday",
+            "opens": "09:00",
+            "closes": "23:00"
+          }
+        ],
+        "sameAs": ["https://instagram.com/kakao.breakfast/"]
+      },
+      {
+        "@type": "CafeOrCoffeeShop",
+        "name": "КАКАО",
+        "image": "https://kakao.com.tm/static/favicon.png",
+        "url": "https://kakao.com.tm",
+        "telephone": "+99362772758",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Мир 4, дом 7",
+          "addressLocality": "Ашхабад",
+          "addressCountry": "TM"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "08:00",
+            "closes": "23:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Sunday",
+            "opens": "09:00",
+            "closes": "23:00"
+          }
+        ],
+        "sameAs": ["https://instagram.com/kakao.breakfast/"]
+      }
+    ]
+  }
+  </script>
+
   <link rel="stylesheet" href="{% static 'menu/css/theme.css' %}">
   <link rel="stylesheet" href="{% static 'menu/css/style.css' %}">
   <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">

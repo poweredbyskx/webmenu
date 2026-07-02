@@ -21,23 +21,22 @@
 
 ## ВАЖНОЕ
 
-### Rate limiting на Search API
-- Установить `django-ratelimit`
-- Ограничить `/api/search/` до 30 запросов в минуту с одного IP
+### ~~Rate limiting на Search API~~ ✅ сделано
+- `django-ratelimit` установлен, `/api/search/` ограничен 30 запросами в минуту с одного IP (403 при превышении)
 - Файл: `menu/views.py`
+- ⚠️ Нужно поставить `pip install -r requirements.txt` в рабочем venv — пакет добавлен в requirements, но не был установлен локально
 
-### Lazy loading изображений
-- Добавить `loading="lazy"` на все `<img>` в сетке меню и категорий
+### ~~Lazy loading изображений~~ ✅ сделано
+- `loading="lazy"` добавлен на все `<img>` позиций в сетке меню и категорий
 - Файлы: `menu.html`, `category.html`, `home.html`
 
-### Тесты
-- Написать тесты для моделей (`Item`, `Category`, `RoastedCoffee`)
-- Написать тест для `search_api` — корректный JSON, фильтр `is_active`
-- Написать тест `CategoryView` — 404 на несуществующий slug
-- Файл: `menu/tests.py`
+### ~~Тесты~~ ✅ сделано
+- Написаны тесты для моделей (`Item`, `Category`, `RoastedCoffee`), view (`Home`/`Menu`/`Category`/`Roasted`/`Beans`), поиска и rate limit
+- Заодно найден и исправлен баг: `search_api`/`SearchView` не фильтровали `is_active` — архивные позиции могли всплывать в поиске
+- Файл: `menu/tests/` (пакет вместо заглушки)
 
-### Убрать неиспользуемый файл
-- Удалить или подключить `templates/includes/header.html`
+### ~~Убрать неиспользуемый файл~~ ✅ сделано
+- `templates/includes/header.html` удалён (нигде не подключался)
 
 ---
 
@@ -48,9 +47,8 @@
 - Создать `static/menu/js/modal.js` — логика модального окна
 - Создать `static/menu/js/categories.js` — скролл и свайп категорий
 
-### Ограничить выборку на главной странице
-- Добавить срез `[:8]` на `new_items` и `seasonal_items` в `HomeView`
-- Файл: `menu/views.py`
+### ~~Ограничить выборку на главной странице~~ ✅ уже сделано
+- В `HomeView` уже стоит срез `[:6]` на `new_food`/`new_drinks`/`seasonal_food`/`seasonal_drinks`
 
 ### Schema.org разметка (SEO)
 - Добавить JSON-LD блок в `base.html` с типом `CafeOrCoffeeShop`

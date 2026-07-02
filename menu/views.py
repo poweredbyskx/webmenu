@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, TemplateView
+from django_ratelimit.decorators import ratelimit
 
 from .models import Category, Item, RoastedCoffee
 
@@ -36,7 +37,7 @@ def build_search_queryset(query: str):
 
     return (
         Item.objects
-        .filter(filters)
+        .filter(filters, is_active=True)
         .select_related("category")
         .distinct()
         .order_by("category__order", "order", "name")
@@ -151,10 +152,13 @@ class SearchView(ListView):
         return ctx
 
 
+@ratelimit(key="ip", rate="30/m", block=True)
 def search_api(request):
     """
     JSON-эндпоинт для живого поиска с фронта.
     Возвращает максимум 10 результатов.
+    Лимит: 30 запросов в минуту с одного IP (django-ratelimit),
+    при превышении отвечает 403.
     """
     q = (request.GET.get("q") or "").strip()
 

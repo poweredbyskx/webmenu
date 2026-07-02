@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -E 's/.*\\\\.//')",
+      "Bash(python -c ' *)",
+      "Bash(./venv/Scripts/python.exe -c ' *)",
+      "Bash(venv/Scripts/python -c ' *)",
+      "Bash(venv/bin/python -c ' *)",
+      "Bash(which python; which python3; ls -la /usr/bin/python* 2>&1; echo \"---\"; uname -a)",
+      "Read(//usr/**)"
+    ]
+  }
+}
