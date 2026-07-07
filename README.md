@@ -52,10 +52,6 @@ python manage.py runserver
 
 Открыть http://localhost:8000
 
-## Деплой
-
-См. `docs/deploy.md` (будет добавлено).
-
 ## Структура
 
 ```
