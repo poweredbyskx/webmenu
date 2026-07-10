@@ -482,7 +482,7 @@ img {
   white-space: pre-wrap;
   padding-left: 10px;
   text-align: center;
-  max-height: 45px;
+  max-height: 75px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
