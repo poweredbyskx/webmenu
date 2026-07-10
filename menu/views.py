@@ -190,6 +190,9 @@ class RoastedView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["coffees"] = RoastedCoffee.objects.filter(is_active=True)
+        ctx["cold_brew"] = Item.objects.filter(
+            slug="cold_brew", is_active=True
+        ).select_related("category").first()
         return ctx
     
 

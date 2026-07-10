@@ -109,7 +109,12 @@
     <p class="info-section__label">СИСТЕМА</p>
     <p class="info-section__sub">Baby Hardtank</p>
   </div>
-  <p class="info-section__text info-section__text--highlight">Мы используем её для приготовления cold brew методом холодного заваривания в течение нескольких часов. Такой процесс позволяет раскрыть мягкий, насыщенный и сбалансированный вкус кофе с пониженной кислотностью и естественной сладостью зерна.</p>
+  <p class="info-section__text info-section__text--highlight">Мы используем её для приготовления {% if cold_brew %}<span class="text-link modal-trigger"
+  data-name="{{ cold_brew.name }}"
+  data-price="{{ cold_brew.price|floatformat:'-2' }}"
+  data-description="{{ cold_brew.description }}"
+  data-image="{% if cold_brew.image %}{{ cold_brew.image.url }}{% endif %}"
+  data-category="{{ cold_brew.category.slug }}">cold brew</span>{% else %}cold brew{% endif %} методом холодного заваривания в течение нескольких часов. Такой процесс позволяет раскрыть мягкий, насыщенный и сбалансированный вкус кофе с пониженной кислотностью и естественной сладостью зерна.</p>
   <div class="info-section__video-wrap">
     <video src="{% static 'menu/videos/hard_tank2.webm' %}" autoplay loop muted playsinline></video>
   </div>
@@ -143,6 +148,27 @@
       <p class="info-section__label">ЗНАНИЯ</p>
     </div>
     <p class="info-section__text">В нашей работе нет случайных мелочей.<br><br>Каждая деталь влияет на результат: зерно, вода, помол, температура, время и руки человека, который готовит кофе. Иногда кажется, что это мелочи, но именно из них складывается вкус.<br><br>К тому, что мы делаем сейчас, мы пришли не сразу. За этим стоит много изучения, проб, ошибок и честных выводов. Что-то не получалось. Что-то приходилось менять. Что-то мы оставляли, потому что понимали, что это наше.<br><br>Мы не считаем, что уже знаем всё. Чем больше работаешь с кофе, тем яснее понимаешь, сколько ещё можно открыть.<br><br>В поиске лучшего вкуса мы находим новые сочетания и новые подходы, но главное уже понятно: мы выбираем честный вкус, внимание к деталям и стабильное качество каждый день.<br><br>Для нас кофе это ежедневная работа с опытом, уважением к продукту и ясным пониманием того, каким должен быть результат.</p>
+  </div>
+</div>
+
+<div id="product-modal-overlay" class="product-modal-overlay" aria-hidden="true">
+  <div class="product-modal-content">
+    <div class="product-card" role="dialog" aria-modal="true">
+      <img id="product-modal-image" src="" alt="" class="product-card__image"/>
+      <div class="product-card__body">
+        <div class="product-card__header">
+          <p class="product-card__title" id="product-modal-title"></p>
+          <p class="product-card__price" id="product-modal-price"></p>
+        </div>
+        <div class="product-card__divider"></div>
+        <p class="product-card__description" id="product-modal-description"></p>
+      </div>
+      <button class="product-card__button" id="product-modal-close" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="#652a29" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
 {% endblock %}
@@ -193,4 +219,45 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const modalOverlay = document.getElementById("product-modal-overlay");
+  const modalImage = document.getElementById("product-modal-image");
+  const modalTitle = document.getElementById("product-modal-title");
+  const modalPrice = document.getElementById("product-modal-price");
+  const modalDescription = document.getElementById("product-modal-description");
+  const modalCloseButton = document.getElementById("product-modal-close");
+
+  function openProductModal(itemEl) {
+    modalTitle.textContent = itemEl.dataset.name || "";
+    modalPrice.textContent = itemEl.dataset.price || "";
+    modalDescription.textContent = itemEl.dataset.description || "";
+    const imageUrl = itemEl.dataset.image || "";
+    if (imageUrl) { modalImage.src = imageUrl; modalImage.style.display = "block"; }
+    else { modalImage.style.display = "none"; }
+    const isDrink = ['non_coffee', 'ice_coffee', 'cocktails'].includes(itemEl.dataset.category || "");
+    const productCard = modalOverlay.querySelector('.product-card');
+    if (productCard) productCard.classList.toggle('product-card--drink', isDrink);
+    modalOverlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeProductModal() {
+    modalOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  document.querySelectorAll('.modal-trigger').forEach(function(el) {
+    el.addEventListener('click', function() { openProductModal(this); });
+  });
+
+  if (modalCloseButton) modalCloseButton.addEventListener("click", closeProductModal);
+  if (modalOverlay) modalOverlay.addEventListener("click", function(e) {
+    if (e.target === modalOverlay) closeProductModal();
+  });
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") closeProductModal();
+  });
+});
+</script>
 {% endblock %}

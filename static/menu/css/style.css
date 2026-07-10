@@ -395,7 +395,7 @@ img {
   justify-content: center;
   padding: 16px;
   z-index: 1000;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .product-modal-overlay.open {
@@ -404,7 +404,7 @@ img {
 
 .product-modal-content {
   max-height: calc(100vh - 32px);
-  overflow: auto;
+  overflow: visible;
   width: 100%;
   max-width: 410px;
 }
@@ -419,7 +419,7 @@ img {
   background-color: #ffffff;
   border: 2px solid #652a29;
   border-radius: 30px;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   padding-bottom: 90px;
@@ -482,6 +482,14 @@ img {
   white-space: pre-wrap;
   padding-left: 10px;
   text-align: center;
+  max-height: 45px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.product-card__description::-webkit-scrollbar {
+  display: none;
 }
 
 .product-card__button {
@@ -1034,6 +1042,7 @@ img {
   font-size: 30px;
   letter-spacing: 0.5em;
   padding-left: 0.5em;
+  overflow: hidden;
 }
 
 
@@ -1235,4 +1244,12 @@ img {
   background: rgba(204, 233, 241, 0.5); /* прозрачность фона: меняй 0.7 (0 = полностью прозрачный, 1 = непрозрачный) */
   margin-top: 20px;    /* отступ сверху от предыдущего блока */
   margin-bottom: 20px; /* отступ снизу до следующего блока */
+}
+
+.text-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
