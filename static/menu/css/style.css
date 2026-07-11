@@ -1253,3 +1253,8 @@ img {
   text-underline-offset: 3px;
   cursor: pointer;
 }
+
+.text-link--light {
+  color: #3E685A;
+  text-decoration-color: #3E685A;
+}

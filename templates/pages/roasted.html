@@ -109,7 +109,7 @@
     <p class="info-section__label">СИСТЕМА</p>
     <p class="info-section__sub">Baby Hardtank</p>
   </div>
-  <p class="info-section__text info-section__text--highlight">Мы используем её для приготовления {% if cold_brew %}<span class="text-link modal-trigger"
+  <p class="info-section__text info-section__text--highlight">Мы используем её для приготовления {% if cold_brew %}<span class="text-link modal-trigger text-link--light"
   data-name="{{ cold_brew.name }}"
   data-price="{{ cold_brew.price|floatformat:'-2' }}"
   data-description="{{ cold_brew.description }}"
@@ -118,7 +118,17 @@
   <div class="info-section__video-wrap">
     <video src="{% static 'menu/videos/hard_tank2.webm' %}" autoplay loop muted playsinline></video>
   </div>
-  <p class="info-section__text info-section__text--highlight">На основе cold brew мы также готовим nitro coffee — охлаждённый кофе, насыщенный азотом. Благодаря азотированию напиток приобретает кремовую текстуру, плотное тело и мягкий сливочный вкус без добавления молока или сахара.</p>
+  <p class="info-section__text info-section__text--highlight">На основе {% if cold_brew %}<span class="text-link modal-trigger text-link--light"
+  data-name="{{ cold_brew.name }}"
+  data-price="{{ cold_brew.price|floatformat:'-2' }}"
+  data-description="{{ cold_brew.description }}"
+  data-image="{% if cold_brew.image %}{{ cold_brew.image.url }}{% endif %}"
+  data-category="{{ cold_brew.category.slug }}">cold brew</span>{% else %}cold brew{% endif %} мы также готовим {% if nitro %}<span class="text-link modal-trigger text-link--light"
+  data-name="{{ nitro.name }}"
+  data-price="{{ nitro.price|floatformat:'-2' }}"
+  data-description="{{ nitro.description }}"
+  data-image="{% if nitro.image %}{{ nitro.image.url }}{% endif %}"
+  data-category="{{ nitro.category.slug }}">nitro coffee</span>{% else %}nitro coffee{% endif %} — охлаждённый кофе, насыщенный азотом. Благодаря азотированию напиток приобретает кремовую текстуру, плотное тело и мягкий сливочный вкус без добавления молока или сахара.</p>
   <div class="info-section__video-wrap">
     <video src="{% static 'menu/videos/hard_tank1.webm' %}" autoplay loop muted playsinline></video>
   </div>
