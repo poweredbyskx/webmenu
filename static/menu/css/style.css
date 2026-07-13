@@ -607,14 +607,14 @@ img {
 }
 
 .roasted-card__label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--primary);
   margin-top: 6px;
 }
 
 .roasted-card__flavor {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--primary);
   opacity: 0.75;
   line-height: 1.4;
