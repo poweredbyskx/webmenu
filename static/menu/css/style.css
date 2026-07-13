@@ -9,7 +9,10 @@
   margin: 0;
   padding: 0;
 }
-
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
 body {
   background: #f0f0f0;
   font-family: 'Basis Grotesque Pro', sans-serif;
@@ -1151,7 +1154,7 @@ img {
 .home-interior {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  height: 750px;
+  height: 725px;
   margin-top: 25px;
   margin-bottom: 25px;
   margin-left: 16px;    /* отступ слева */
