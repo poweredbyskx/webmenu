@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "rest_framework",
 
     # third-party
+    "corsheaders",
     "adminsortable2",
     "imagekit",
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -185,3 +187,11 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar": "sidebar-light-primary",
     "accent": "accent-maroon",
 }
+
+
+# --- CORS ---------------------------------------------------------------
+# Для мобильного/веб Flutter-приложения
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
