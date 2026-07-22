@@ -9,7 +9,7 @@ django-modeltranslation==0.20.3
 django-ratelimit==4.1.0
 djangorestframework==3.17.1
 gunicorn==25.3.0
-packaging==26.0
+packaging==26.2
 pilkit==3.0
 pillow==12.2.0
 psycopg==3.3.3
