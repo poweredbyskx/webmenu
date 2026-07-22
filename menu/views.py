@@ -199,3 +199,74 @@ class RoastedView(TemplateView):
 
 class BeansView(TemplateView):
     template_name = "pages/beans.html"
+
+
+class BeansView(TemplateView):
+    template_name = "pages/beans.html"
+
+
+def api_categories(request):
+    """
+    Список всех категорий меню — для мобильного приложения.
+    """
+    categories = Category.objects.all().order_by("order", "name")
+    data = [
+        {
+            "id": c.id,
+            "name": c.name,
+            "slug": c.slug,
+            "order": c.order,
+        }
+        for c in categories
+    ]
+    return JsonResponse(data, safe=False)
+
+
+def api_items(request):
+    """
+    Список позиций меню. Фильтр по категории через ?category=slug
+    """
+    category_slug = request.GET.get("category")
+    items = Item.objects.filter(is_active=True).select_related("category")
+
+    if category_slug:
+        items = items.filter(category__slug=category_slug)
+
+    items = items.order_by("category__order", "order", "name")
+
+    data = [
+        {
+            "id": item.id,
+            "name": item.name,
+            "slug": item.slug,
+            "description": item.description,
+            "price": str(item.price),
+            "image": item.thumb_300.url if item.image else "",
+            "category": item.category.name,
+            "category_slug": item.category.slug,
+            "is_new": item.is_new,
+            "is_seasonal": item.is_seasonal,
+        }
+        for item in items
+    ]
+    return JsonResponse(data, safe=False)
+
+
+def api_item_detail(request, slug):
+    """
+    Детали одной позиции меню по slug.
+    """
+    item = get_object_or_404(Item, slug=slug, is_active=True)
+    data = {
+        "id": item.id,
+        "name": item.name,
+        "slug": item.slug,
+        "description": item.description,
+        "price": str(item.price),
+        "image": item.image.url if item.image else "",
+        "category": item.category.name,
+        "category_slug": item.category.slug,
+        "is_new": item.is_new,
+        "is_seasonal": item.is_seasonal,
+    }
+    return JsonResponse(data)
