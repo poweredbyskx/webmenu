@@ -5,15 +5,18 @@ from imagekit.processors import ResizeToFit
 from slugify import slugify
 
 
-class Category(models.Model):
+class Venue(models.Model):
     name = models.CharField("Название", max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
+    address = models.CharField("Адрес", max_length=255, blank=True)
+    logo = models.ImageField("Логотип", upload_to="venues/", blank=True, null=True)
+    is_active = models.BooleanField("Активно", default=True)
     order = models.PositiveIntegerField("Порядок", default=0, db_index=True)
 
     class Meta:
         ordering = ["order", "name"]
-        verbose_name = "Категория"
-        verbose_name_plural = "Категории"
+        verbose_name = "Заведение"
+        verbose_name_plural = "Заведения"
 
     def __str__(self) -> str:
         return self.name
@@ -23,6 +26,30 @@ class Category(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+class Category(models.Model):
+    venue = models.ForeignKey(
+        Venue,
+        on_delete=models.CASCADE,
+        related_name="categories",
+        verbose_name="Заведение",
+    )
+    name = models.CharField("Название", max_length=200)
+    slug = models.SlugField(max_length=220, blank=True)  # убрали unique=True
+    order = models.PositiveIntegerField("Порядок", default=0, db_index=True)
+
+    class Meta:
+        ordering = ["order", "name"]
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+        unique_together = [["venue", "slug"]]  # уникальность в рамках заведения
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.venue.name})"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 class Item(models.Model):
     category = models.ForeignKey(
@@ -32,7 +59,7 @@ class Item(models.Model):
         verbose_name="Категория",
     )
     name = models.CharField("Название", max_length=200)
-    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    slug = models.SlugField(max_length=220, blank=True)
     description = models.TextField("Описание", blank=True)
     price = models.DecimalField(
         "Цена",
@@ -61,6 +88,7 @@ class Item(models.Model):
         ordering = ["order", "name"]
         verbose_name = "Позиция меню"
         verbose_name_plural = "Позиции меню"
+        unique_together = [["category", "slug"]]
 
     def __str__(self) -> str:
         return self.name
