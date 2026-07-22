@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     HomeView, MenuView, CategoryView, SearchView, RoastedView, BeansView,
-    search_api, api_categories, api_items, api_item_detail
+    search_api, api_categories, api_items, api_item_detail, api_home
 )
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path("api/categories/", api_categories, name="api_categories"),
     path("api/items/", api_items, name="api_items"),
     path("api/items/<slug:slug>/", api_item_detail, name="api_item_detail"),
+    path("api/home/", api_home, name="api_home"),
 ]

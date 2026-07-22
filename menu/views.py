@@ -270,3 +270,52 @@ def api_item_detail(request, slug):
         "is_seasonal": item.is_seasonal,
     }
     return JsonResponse(data)
+
+
+def api_home(request):
+    """
+    Данные для главного экрана — сезонные и новые позиции,
+    разделённые на еду и напитки, зеркалит логику HomeView.
+    """
+    DRINK_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
+
+    def serialize(item):
+        return {
+            "id": item.id,
+            "name": item.name,
+            "slug": item.slug,
+            "description": item.description,
+            "price": str(item.price),
+            "image": item.thumb_300.url if item.image else "",
+            "category": item.category.name,
+            "category_slug": item.category.slug,
+        }
+
+    seasonal_food = list(
+        Item.objects.filter(is_seasonal=True, is_active=True)
+        .exclude(category__slug__in=DRINK_SLUGS)
+        .select_related("category")[:6]
+    )
+    seasonal_drinks = list(
+        Item.objects.filter(is_seasonal=True, is_active=True)
+        .filter(category__slug__in=DRINK_SLUGS)
+        .select_related("category")[:6]
+    )
+    new_food = list(
+        Item.objects.filter(is_new=True, is_active=True)
+        .exclude(category__slug__in=DRINK_SLUGS)
+        .select_related("category")[:6]
+    )
+    new_drinks = list(
+        Item.objects.filter(is_new=True, is_active=True)
+        .filter(category__slug__in=DRINK_SLUGS)
+        .select_related("category")[:6]
+    )
+
+    data = {
+        "seasonal_food": [serialize(i) for i in seasonal_food],
+        "seasonal_drinks": [serialize(i) for i in seasonal_drinks],
+        "new_food": [serialize(i) for i in new_food],
+        "new_drinks": [serialize(i) for i in new_drinks],
+    }
+    return JsonResponse(data)
