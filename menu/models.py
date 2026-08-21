@@ -75,9 +75,15 @@ class Item(models.Model):
     )
     thumb_300 = ImageSpecField(
         source="image",
-        processors=[ResizeToFit(300, 300)],
+        processors=[ResizeToFit(300, 300, upscale=False)],
         format="JPEG",
         options={"quality": 85},
+    )
+    card_image = ImageSpecField(
+        source="image",
+        processors=[ResizeToFit(800, 800, upscale=False)],
+        format="WEBP",
+        options={"quality": 88},
     )
     is_new = models.BooleanField("Новинка", default=False)
     is_seasonal = models.BooleanField("Сезонное", default=False)

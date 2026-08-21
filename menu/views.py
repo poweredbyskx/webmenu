@@ -241,7 +241,7 @@ def api_items(request):
             "slug": item.slug,
             "description": item.description,
             "price": str(item.price),
-            "image": item.thumb_300.url if item.image else "",
+            "image": item.card_image.url if item.image else "",
             "category": item.category.name,
             "category_slug": item.category.slug,
             "is_new": item.is_new,
@@ -286,7 +286,7 @@ def api_home(request):
             "slug": item.slug,
             "description": item.description,
             "price": str(item.price),
-            "image": item.thumb_300.url if item.image else "",
+            "image": item.card_image.url if item.image else "",
             "category": item.category.name,
             "category_slug": item.category.slug,
         }
