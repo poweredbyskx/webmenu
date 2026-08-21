@@ -201,10 +201,6 @@ class BeansView(TemplateView):
     template_name = "pages/beans.html"
 
 
-class BeansView(TemplateView):
-    template_name = "pages/beans.html"
-
-
 def api_categories(request):
     """
     Список всех категорий меню — для мобильного приложения.
