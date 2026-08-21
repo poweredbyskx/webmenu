@@ -2,11 +2,12 @@ from django.test import TestCase
 from django.urls import reverse
 
 from menu.models import Category, Item, RoastedCoffee
+from menu.tests.factories import make_category
 
 
 class HomeViewTests(TestCase):
     def setUp(self):
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category", order=0)
+        self.category = make_category(name="Тестовая категория", slug="test-category", order=0)
         self.active_item = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
             is_new=True, is_seasonal=True,
@@ -40,7 +41,7 @@ class HomeViewTests(TestCase):
 
 class MenuViewTests(TestCase):
     def setUp(self):
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category")
+        self.category = make_category(name="Тестовая категория", slug="test-category")
         self.active_item = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
         )
@@ -61,7 +62,7 @@ class MenuViewTests(TestCase):
 
 class CategoryViewTests(TestCase):
     def setUp(self):
-        self.category = Category.objects.create(name="Кофе", slug="coffee")
+        self.category = make_category(name="Кофе", slug="coffee")
         self.active_item = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
         )
@@ -78,7 +79,7 @@ class CategoryViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_only_active_items_in_this_category(self):
-        other_category = Category.objects.create(name="Чай", slug="tea")
+        other_category = make_category(name="Чай", slug="tea")
         other_item = Item.objects.create(
             category=other_category, name="Чай зелёный", price=30, is_active=True,
         )
