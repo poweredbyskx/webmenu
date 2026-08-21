@@ -4,6 +4,20 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
+def link_categories_to_default_venue(apps, schema_editor):
+    Venue = apps.get_model("menu", "Venue")
+    Category = apps.get_model("menu", "Category")
+
+    if not Category.objects.filter(venue__isnull=True).exists():
+        return
+
+    venue, _ = Venue.objects.get_or_create(
+        slug="kakao",
+        defaults={"name": "Какао"},
+    )
+    Category.objects.filter(venue__isnull=True).update(venue=venue)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -14,8 +28,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='venue',
-            field=models.ForeignKey(default=2, on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='menu.venue', verbose_name='Заведение'),
-            preserve_default=False,
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='menu.venue', verbose_name='Заведение'),
+        ),
+        migrations.RunPython(link_categories_to_default_venue, migrations.RunPython.noop),
+        migrations.AlterField(
+            model_name='category',
+            name='venue',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='menu.venue', verbose_name='Заведение'),
         ),
         migrations.AlterUniqueTogether(
             name='category',
