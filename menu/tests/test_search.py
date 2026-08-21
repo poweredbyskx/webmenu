@@ -4,13 +4,14 @@ from django.core.cache import cache
 from django.test import TestCase
 from django.urls import reverse
 
-from menu.models import Category, Item
+from menu.models import Item
+from menu.tests.factories import make_category
 from menu.views import MIN_QUERY_LEN, build_search_queryset
 
 
 class BuildSearchQuerysetTests(TestCase):
     def setUp(self):
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category")
+        self.category = make_category(name="Тестовая категория", slug="test-category")
         self.latte = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
         )
@@ -61,7 +62,7 @@ class BuildSearchQuerysetTests(TestCase):
 
 class SearchViewTests(TestCase):
     def setUp(self):
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category")
+        self.category = make_category(name="Тестовая категория", slug="test-category")
         self.latte = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
         )
@@ -85,7 +86,7 @@ class SearchApiTests(TestCase):
         # чистим его, чтобы тесты не мешали друг другу и не ловили 403
         # из-за счётчика, накопленного в предыдущих тестах.
         cache.clear()
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category")
+        self.category = make_category(name="Тестовая категория", slug="test-category")
         self.latte = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
         )
@@ -122,7 +123,7 @@ class SearchApiTests(TestCase):
 class SearchApiRateLimitTests(TestCase):
     def setUp(self):
         cache.clear()
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category")
+        self.category = make_category(name="Тестовая категория", slug="test-category")
         Item.objects.create(category=self.category, name="Латте", price=50, is_active=True)
 
     def tearDown(self):

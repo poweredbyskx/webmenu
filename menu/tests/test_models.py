@@ -2,42 +2,43 @@ from django.db import IntegrityError, transaction
 from django.test import TestCase
 
 from menu.models import Category, Item, RoastedCoffee
+from menu.tests.factories import make_category
 
 
 class CategorySlugTests(TestCase):
     def test_slug_is_generated_from_name(self):
-        category = Category.objects.create(name="Тестовая новинка")
+        category = make_category(name="Тестовая новинка")
         self.assertEqual(category.slug, "testovaia-novinka")
 
     def test_explicit_slug_is_not_overwritten(self):
-        category = Category.objects.create(name="Кофе", slug="custom-slug")
+        category = make_category(name="Кофе", slug="custom-slug")
         self.assertEqual(category.slug, "custom-slug")
 
     def test_duplicate_slug_raises_integrity_error(self):
-        Category.objects.create(name="Кофе", slug="coffee")
+        make_category(name="Кофе", slug="coffee")
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
-                Category.objects.create(name="Кофе 2", slug="coffee")
+                make_category(name="Кофе 2", slug="coffee")
 
     def test_ordering_by_order_then_name(self):
         # 0002_seed_categories подсевает свои категории в тестовую БД —
         # начинаем с чистого листа, чтобы проверять только сортировку.
         Category.objects.all().delete()
-        c_b = Category.objects.create(name="Б категория", order=1)
-        c_a = Category.objects.create(name="А категория", order=1)
-        c_first = Category.objects.create(name="Всегда первая", order=0)
+        c_b = make_category(name="Б категория", order=1)
+        c_a = make_category(name="А категория", order=1)
+        c_first = make_category(name="Всегда первая", order=0)
         self.assertEqual(
             list(Category.objects.all()), [c_first, c_a, c_b]
         )
 
     def test_str_returns_name(self):
-        category = Category.objects.create(name="Завтраки")
-        self.assertEqual(str(category), "Завтраки")
+        category = make_category(name="Завтраки")
+        self.assertEqual(str(category), f"Завтраки ({category.venue.name})")
 
 
 class ItemModelTests(TestCase):
     def setUp(self):
-        self.category = Category.objects.create(name="Тестовая категория", slug="test-category")
+        self.category = make_category(name="Тестовая категория", slug="test-category")
 
     def test_slug_is_generated_from_name(self):
         item = Item.objects.create(category=self.category, name="Латте", price=50)
