@@ -9,5 +9,9 @@ def make_venue(**kwargs):
 
 
 def make_category(**kwargs):
-    kwargs.setdefault("venue", make_venue())
-    return Category.objects.create(**kwargs)
+    venues = kwargs.pop("venues", None)
+    if venues is None:
+        venues = [make_venue()]
+    category = Category.objects.create(**kwargs)
+    category.venues.set(venues)
+    return category

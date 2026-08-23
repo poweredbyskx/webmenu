@@ -33,7 +33,8 @@ class CategorySlugTests(TestCase):
 
     def test_str_returns_name(self):
         category = make_category(name="Завтраки")
-        self.assertEqual(str(category), f"Завтраки ({category.venue.name})")
+        venue_names = ", ".join(v.name for v in category.venues.all())
+        self.assertEqual(str(category), f"Завтраки ({venue_names})")
 
 
 class ItemModelTests(TestCase):

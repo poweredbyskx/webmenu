@@ -27,24 +27,24 @@ class Venue(models.Model):
         super().save(*args, **kwargs)
 
 class Category(models.Model):
-    venue = models.ForeignKey(
+    venues = models.ManyToManyField(
         Venue,
-        on_delete=models.CASCADE,
         related_name="categories",
-        verbose_name="Заведение",
+        verbose_name="Заведения",
+        blank=True,
     )
     name = models.CharField("Название", max_length=200)
-    slug = models.SlugField(max_length=220, blank=True)  # убрали unique=True
+    slug = models.SlugField(max_length=220, blank=True, unique=True)
     order = models.PositiveIntegerField("Порядок", default=0, db_index=True)
 
     class Meta:
         ordering = ["order", "name"]
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
-        unique_together = [["venue", "slug"]]  # уникальность в рамках заведения
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.venue.name})"
+        venues = ", ".join(v.name for v in self.venues.all())
+        return f"{self.name} ({venues})" if venues else self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -59,7 +59,7 @@ class Item(models.Model):
         verbose_name="Категория",
     )
     name = models.CharField("Название", max_length=200)
-    slug = models.SlugField(max_length=220, blank=True)
+    slug = models.SlugField(max_length=220, blank=True, unique=True)
     description = models.TextField("Описание", blank=True)
     price = models.DecimalField(
         "Цена",
@@ -94,7 +94,6 @@ class Item(models.Model):
         ordering = ["order", "name"]
         verbose_name = "Позиция меню"
         verbose_name_plural = "Позиции меню"
-        unique_together = [["category", "slug"]]
 
     def __str__(self) -> str:
         return self.name
