@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from menu.models import Item
-from menu.tests.factories import make_category
+from menu.tests.factories import VenueSessionTestCase, make_category
 from menu.views import MIN_QUERY_LEN, build_search_queryset
 
 
@@ -60,8 +60,9 @@ class BuildSearchQuerysetTests(TestCase):
         self.assertNotIn(inactive, build_search_queryset("Архивный"))
 
 
-class SearchViewTests(TestCase):
+class SearchViewTests(VenueSessionTestCase):
     def setUp(self):
+        super().setUp()
         self.category = make_category(name="Тестовая категория", slug="test-category")
         self.latte = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
@@ -80,8 +81,9 @@ class SearchViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class SearchApiTests(TestCase):
+class SearchApiTests(VenueSessionTestCase):
     def setUp(self):
+        super().setUp()
         # django-ratelimit считает запросы через общий (process-wide) кэш —
         # чистим его, чтобы тесты не мешали друг другу и не ловили 403
         # из-за счётчика, накопленного в предыдущих тестах.
@@ -120,8 +122,9 @@ class SearchApiTests(TestCase):
         self.assertEqual(len(data), 10)
 
 
-class SearchApiRateLimitTests(TestCase):
+class SearchApiRateLimitTests(VenueSessionTestCase):
     def setUp(self):
+        super().setUp()
         cache.clear()
         self.category = make_category(name="Тестовая категория", slug="test-category")
         Item.objects.create(category=self.category, name="Латте", price=50, is_active=True)

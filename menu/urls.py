@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     HomeView, MenuView, CategoryView, SearchView, RoastedView, BeansView,
-    search_api, api_categories, api_items, api_item_detail, api_home
+    search_api, api_categories, api_items, api_item_detail, api_home,
+    select_venue, set_venue,
 )
 
 urlpatterns = [
@@ -11,6 +12,8 @@ urlpatterns = [
     path("search/", SearchView.as_view(), name="search"),
     path("roasted/", RoastedView.as_view(), name="roasted"),
     path("beans/", BeansView.as_view(), name="beans"),
+    path("choose-venue/", select_venue, name="select_venue"),
+    path("set-venue/<slug:slug>/", set_venue, name="set_venue"),
 
     path("api/search/", search_api, name="search_api"),
     path("api/categories/", api_categories, name="api_categories"),
