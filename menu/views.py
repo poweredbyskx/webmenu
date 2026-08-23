@@ -46,6 +46,18 @@ def build_search_queryset(query: str):
 
 DRINK_CATEGORY_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
 
+
+def _require_venue_param(request):
+    """
+    Общая проверка для api_*: venue обязателен, чтобы старый/необновлённый
+    клиент явно получал ошибку, а не смешанные данные нескольких точек.
+    Возвращает (venue_slug, None) или (None, JsonResponse с 400).
+    """
+    venue_slug = request.GET.get("venue")
+    if not venue_slug:
+        return None, JsonResponse({"error": "Query param 'venue' is required"}, status=400)
+    return venue_slug, None
+
 class HomeView(TemplateView):
     template_name = "pages/home.html"
 
@@ -203,9 +215,17 @@ class BeansView(TemplateView):
 
 def api_categories(request):
     """
-    Список всех категорий меню — для мобильного приложения.
+    Список категорий меню для выбранной точки — для мобильного приложения.
     """
-    categories = Category.objects.all().order_by("order", "name")
+    venue_slug, error = _require_venue_param(request)
+    if error:
+        return error
+
+    categories = (
+        Category.objects.filter(venues__slug=venue_slug)
+        .distinct()
+        .order_by("order", "name")
+    )
     data = [
         {
             "id": c.id,
@@ -220,10 +240,17 @@ def api_categories(request):
 
 def api_items(request):
     """
-    Список позиций меню. Фильтр по категории через ?category=slug
+    Список позиций меню выбранной точки. Фильтр по категории через ?category=slug
     """
+    venue_slug, error = _require_venue_param(request)
+    if error:
+        return error
+
     category_slug = request.GET.get("category")
-    items = Item.objects.filter(is_active=True).select_related("category")
+    items = (
+        Item.objects.filter(is_active=True, category__venues__slug=venue_slug)
+        .select_related("category")
+    )
 
     if category_slug:
         items = items.filter(category__slug=category_slug)
@@ -270,9 +297,13 @@ def api_item_detail(request, slug):
 
 def api_home(request):
     """
-    Данные для главного экрана — сезонные и новые позиции,
+    Данные для главного экрана выбранной точки — сезонные и новые позиции,
     разделённые на еду и напитки, зеркалит логику HomeView.
     """
+    venue_slug, error = _require_venue_param(request)
+    if error:
+        return error
+
     DRINK_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
 
     def serialize(item):
@@ -287,24 +318,24 @@ def api_home(request):
             "category_slug": item.category.slug,
         }
 
+    base = Item.objects.filter(is_active=True, category__venues__slug=venue_slug)
+
     seasonal_food = list(
-        Item.objects.filter(is_seasonal=True, is_active=True)
+        base.filter(is_seasonal=True)
         .exclude(category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
     seasonal_drinks = list(
-        Item.objects.filter(is_seasonal=True, is_active=True)
-        .filter(category__slug__in=DRINK_SLUGS)
+        base.filter(is_seasonal=True, category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
     new_food = list(
-        Item.objects.filter(is_new=True, is_active=True)
+        base.filter(is_new=True)
         .exclude(category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
     new_drinks = list(
-        Item.objects.filter(is_new=True, is_active=True)
-        .filter(category__slug__in=DRINK_SLUGS)
+        base.filter(is_new=True, category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
 
