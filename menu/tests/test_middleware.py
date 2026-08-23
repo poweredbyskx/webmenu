@@ -11,12 +11,15 @@ class VenueSelectionMiddlewareTests(TestCase):
         self.assertIn(reverse("select_venue"), response.url)
 
     def test_passes_through_when_venue_in_session(self):
+        # /menu/, не "/" — главная сейчас намеренно всегда переспрашивает
+        # точку заново (см. test_home_page_always_reasks_unless_just_set),
+        # это отдельное поведение только для неё.
         venue = make_venue()
         session = self.client.session
         session["venue_slug"] = venue.slug
         session.save()
 
-        response = self.client.get(reverse("home"))
+        response = self.client.get(reverse("menu"))
         self.assertEqual(response.status_code, 200)
 
     def test_resets_session_and_redirects_when_venue_deactivated(self):
@@ -25,10 +28,30 @@ class VenueSelectionMiddlewareTests(TestCase):
         session["venue_slug"] = venue.slug
         session.save()
 
-        response = self.client.get(reverse("home"))
+        response = self.client.get(reverse("menu"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("select_venue"), response.url)
         self.assertNotIn("venue_slug", self.client.session)
+
+    def test_home_page_always_reasks_unless_just_set(self):
+        # Временное поведение для удобства ручного тестирования: "/" всегда
+        # переспрашивает точку при обновлении, кроме самого первого захода
+        # сразу после set_venue (иначе — бесконечный редирект).
+        venue = make_venue()
+        session = self.client.session
+        session["venue_slug"] = venue.slug
+        session.save()
+
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("select_venue"), response.url)
+
+    def test_home_page_passes_through_right_after_set_venue(self):
+        venue = make_venue()
+        response = self.client.get(
+            reverse("set_venue", args=[venue.slug]), {"next": reverse("home")}
+        )
+        self.assertRedirects(response, reverse("home"))
 
     def test_api_paths_are_exempt_even_without_venue(self):
         response = self.client.get(reverse("api_categories"))

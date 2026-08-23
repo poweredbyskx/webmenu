@@ -36,6 +36,15 @@ class VenueSelectionMiddleware:
         path = _strip_locale_prefix(request.path)
         if not path.startswith(VENUE_EXEMPT_PATHS_PREFIXES):
             slug = request.session.get("venue_slug")
+
+            # ВРЕМЕННО (по просьбе для удобства ручного тестирования, пока
+            # нет нормального переключателя точки в шапке): главная страница
+            # всегда переспрашивает точку при обновлении, кроме самого
+            # первого захода сразу после выбора (иначе — бесконечный
+            # редирект set_venue -> "/" -> снова на выбор).
+            if path == "/" and not request.session.pop("venue_just_set", False):
+                slug = None
+
             if not slug:
                 return redirect(reverse("select_venue") + f"?next={request.path}")
             # выбранная ранее точка могла быть деактивирована — сбросить
