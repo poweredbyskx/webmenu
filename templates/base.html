@@ -115,6 +115,7 @@
 
   {% block content %}{% endblock %}
 
+  {% block footer %}
   <footer class="site-footer">
     <div class="site-footer__inner">
       <div class="site-footer__logo">
@@ -122,12 +123,15 @@
       </div>
       <div class="site-footer__contacts">
         <div class="site-footer__location">
-          <p class="site-footer__address">Мир 4, Parahat базар</p>
-          <a href="tel:+99364359789" class="site-footer__phone" onclick="track('phone_call',{source:'footer'})">+993 64 359786</a>
+          {% if current_venue %}
+            <p class="site-footer__address">{{ current_venue.address }}</p>
+            <a href="tel:{{ current_venue.phone }}" class="site-footer__phone" onclick="track('phone_call',{source:'footer'})">{{ current_venue.phone }}</a>
+          {% endif %}
         </div>
       </div>
     </div>
   </footer>
+  {% endblock %}
 
   {% block extra_js %}{% endblock %}
 <script>

@@ -37,5 +37,5 @@ class RoastedCoffeeAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(Venue)
 class VenueAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ("name", "slug", "is_active", "order")
+    list_display = ("name", "slug", "phone", "is_active", "order")
     prepopulated_fields = {"slug": ("name",)}

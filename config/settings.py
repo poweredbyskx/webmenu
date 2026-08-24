@@ -71,6 +71,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.i18n",
                 "menu.context_processors.menu_categories",
+                "menu.context_processors.current_venue",
             ],
         },
     },
