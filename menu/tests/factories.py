@@ -31,10 +31,4 @@ class VenueSessionTestCase(TestCase):
         self.venue = make_venue()
         session = self.client.session
         session["venue_slug"] = self.venue.slug
-        # "/" временно всегда переспрашивает точку заново при обновлении,
-        # кроме самого первого захода сразу после выбора — см.
-        # menu/middleware.py. Ставим флаг, чтобы существующие тесты,
-        # обращающиеся к home напрямую (не через set_venue), не ловили
-        # редирект.
-        session["venue_just_set"] = True
         session.save()

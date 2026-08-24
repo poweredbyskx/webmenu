@@ -1,25 +1,35 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from menu.middleware import DEFAULT_VENUE_SLUG
 from menu.tests.factories import make_venue
 
 
 class VenueSelectionMiddlewareTests(TestCase):
-    def test_redirects_to_select_venue_when_no_venue_in_session(self):
+    def test_defaults_to_default_venue_when_no_venue_in_session(self):
+        # ВРЕМЕННО: пока kakao_gaudan наполняется контентом, свежий визит без
+        # выбранной точки должен незаметно получить старое меню (Мир 4),
+        # а не упираться в обязательный выбор.
+        make_venue(slug=DEFAULT_VENUE_SLUG, name="Мир 4")
+
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session["venue_slug"], DEFAULT_VENUE_SLUG)
+
+    def test_redirects_to_select_venue_when_default_venue_missing(self):
+        # Если дефолтная точка вообще не существует в базе — это не должно
+        # тихо ломаться, а должно явно отправить на выбор.
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("select_venue"), response.url)
 
     def test_passes_through_when_venue_in_session(self):
-        # /menu/, не "/" — главная сейчас намеренно всегда переспрашивает
-        # точку заново (см. test_home_page_always_reasks_unless_just_set),
-        # это отдельное поведение только для неё.
         venue = make_venue()
         session = self.client.session
         session["venue_slug"] = venue.slug
         session.save()
 
-        response = self.client.get(reverse("menu"))
+        response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)
 
     def test_resets_session_and_redirects_when_venue_deactivated(self):
@@ -28,30 +38,10 @@ class VenueSelectionMiddlewareTests(TestCase):
         session["venue_slug"] = venue.slug
         session.save()
 
-        response = self.client.get(reverse("menu"))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse("select_venue"), response.url)
-        self.assertNotIn("venue_slug", self.client.session)
-
-    def test_home_page_always_reasks_unless_just_set(self):
-        # Временное поведение для удобства ручного тестирования: "/" всегда
-        # переспрашивает точку при обновлении, кроме самого первого захода
-        # сразу после set_venue (иначе — бесконечный редирект).
-        venue = make_venue()
-        session = self.client.session
-        session["venue_slug"] = venue.slug
-        session.save()
-
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("select_venue"), response.url)
-
-    def test_home_page_passes_through_right_after_set_venue(self):
-        venue = make_venue()
-        response = self.client.get(
-            reverse("set_venue", args=[venue.slug]), {"next": reverse("home")}
-        )
-        self.assertRedirects(response, reverse("home"))
+        self.assertNotIn("venue_slug", self.client.session)
 
     def test_api_paths_are_exempt_even_without_venue(self):
         response = self.client.get(reverse("api_categories"))
