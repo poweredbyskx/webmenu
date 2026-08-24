@@ -1,12 +1,12 @@
-from django.test import TestCase
 from django.urls import reverse
 
 from menu.models import Category, Item, RoastedCoffee
-from menu.tests.factories import make_category
+from menu.tests.factories import VenueSessionTestCase, make_category
 
 
-class HomeViewTests(TestCase):
+class HomeViewTests(VenueSessionTestCase):
     def setUp(self):
+        super().setUp()
         self.category = make_category(name="Тестовая категория", slug="test-category", order=0)
         self.active_item = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
@@ -39,8 +39,9 @@ class HomeViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class MenuViewTests(TestCase):
+class MenuViewTests(VenueSessionTestCase):
     def setUp(self):
+        super().setUp()
         self.category = make_category(name="Тестовая категория", slug="test-category")
         self.active_item = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
@@ -60,8 +61,9 @@ class MenuViewTests(TestCase):
         self.assertNotIn(self.inactive_item, items)
 
 
-class CategoryViewTests(TestCase):
+class CategoryViewTests(VenueSessionTestCase):
     def setUp(self):
+        super().setUp()
         self.category = make_category(name="Кофе", slug="coffee")
         self.active_item = Item.objects.create(
             category=self.category, name="Латте", price=50, is_active=True,
@@ -90,7 +92,7 @@ class CategoryViewTests(TestCase):
         self.assertNotIn(other_item, items)
 
 
-class RoastedViewTests(TestCase):
+class RoastedViewTests(VenueSessionTestCase):
     def test_status_code(self):
         response = self.client.get(reverse("roasted"))
         self.assertEqual(response.status_code, 200)
@@ -104,7 +106,7 @@ class RoastedViewTests(TestCase):
         self.assertNotIn(inactive, coffees)
 
 
-class BeansViewTests(TestCase):
+class BeansViewTests(VenueSessionTestCase):
     def test_status_code(self):
         response = self.client.get(reverse("beans"))
         self.assertEqual(response.status_code, 200)

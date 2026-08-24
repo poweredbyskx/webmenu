@@ -2,11 +2,12 @@ import logging
 
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import ListView, TemplateView
 from django_ratelimit.decorators import ratelimit
 
-from .models import Category, Item, RoastedCoffee
+from .models import Category, Item, RoastedCoffee, Venue
 
 
 logger = logging.getLogger(__name__)
@@ -22,10 +23,11 @@ SEARCH_FIELDS = [
 ]
 
 
-def build_search_queryset(query: str):
+def build_search_queryset(query: str, venue_slug: str | None = None):
     """
     Возвращает QuerySet items, отфильтрованный по подстроке в любом из языковых
     полей или в названии категории. Регистронезависимо (icontains = ILIKE в Postgres).
+    Если передан venue_slug — дополнительно ограничивает точкой.
     """
     q = (query or "").strip()
     if len(q) < MIN_QUERY_LEN:
@@ -35,9 +37,12 @@ def build_search_queryset(query: str):
     for field in SEARCH_FIELDS:
         filters |= Q(**{f"{field}__icontains": q})
 
+    qs = Item.objects.filter(filters, is_active=True)
+    if venue_slug:
+        qs = qs.filter(category__venues__slug=venue_slug)
+
     return (
-        Item.objects
-        .filter(filters, is_active=True)
+        qs
         .select_related("category")
         .distinct()
         .order_by("category__order", "order", "name")
@@ -46,36 +51,52 @@ def build_search_queryset(query: str):
 
 DRINK_CATEGORY_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
 
+
+def _require_venue_param(request):
+    """
+    Общая проверка для api_*: venue обязателен, чтобы старый/необновлённый
+    клиент явно получал ошибку, а не смешанные данные нескольких точек.
+    Возвращает (venue_slug, None) или (None, JsonResponse с 400).
+    """
+    venue_slug = request.GET.get("venue")
+    if not venue_slug:
+        return None, JsonResponse({"error": "Query param 'venue' is required"}, status=400)
+    return venue_slug, None
+
 class HomeView(TemplateView):
     template_name = "pages/home.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        categories = Category.objects.prefetch_related("items").all()
+        venue_slug = self.request.session.get("venue_slug")
+        categories = (
+            Category.objects.filter(venues__slug=venue_slug)
+            .distinct()
+            .prefetch_related("items")
+        )
         first_category = categories.first()
 
         DRINK_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
+        base_items = Item.objects.filter(is_active=True, category__venues__slug=venue_slug)
 
         seasonal_food = list(
-            Item.objects.filter(is_seasonal=True, is_active=True)
+            base_items.filter(is_seasonal=True)
             .exclude(category__slug__in=DRINK_SLUGS)
             .select_related("category")[:6]
         )
         seasonal_drinks = list(
-            Item.objects.filter(is_seasonal=True, is_active=True)
-            .filter(category__slug__in=DRINK_SLUGS)
+            base_items.filter(is_seasonal=True, category__slug__in=DRINK_SLUGS)
             .select_related("category")[:6]
         )
 
         new_food = list(
-            Item.objects.filter(is_new=True, is_active=True)
+            base_items.filter(is_new=True)
             .exclude(category__slug__in=DRINK_SLUGS)
             .select_related("category")[:6]
         )
         new_drinks = list(
-            Item.objects.filter(is_new=True, is_active=True)
-            .filter(category__slug__in=DRINK_SLUGS)
+            base_items.filter(is_new=True, category__slug__in=DRINK_SLUGS)
             .select_related("category")[:6]
         )
 
@@ -98,9 +119,14 @@ class MenuView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        categories = Category.objects.all().order_by("order", "name")
+        venue_slug = self.request.session.get("venue_slug")
+        categories = (
+            Category.objects.filter(venues__slug=venue_slug)
+            .distinct()
+            .order_by("order", "name")
+        )
         items = (
-            Item.objects.filter(is_active=True)
+            Item.objects.filter(is_active=True, category__venues__slug=venue_slug)
             .select_related("category")
             .order_by("category__order", "order", "name")
         )
@@ -119,7 +145,10 @@ class CategoryView(ListView):
     context_object_name = "items"
 
     def dispatch(self, request, *args, **kwargs):
-        self.category = get_object_or_404(Category, slug=self.kwargs["slug"])
+        venue_slug = request.session.get("venue_slug")
+        self.category = get_object_or_404(
+            Category, slug=self.kwargs["slug"], venues__slug=venue_slug
+        )
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -143,7 +172,8 @@ class SearchView(ListView):
 
     def get_queryset(self):
         self.q = (self.request.GET.get("q") or "").strip()
-        return build_search_queryset(self.q)
+        venue_slug = self.request.session.get("venue_slug")
+        return build_search_queryset(self.q, venue_slug)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -165,7 +195,8 @@ def search_api(request):
     if len(q) < MIN_QUERY_LEN:
         return JsonResponse([], safe=False)
 
-    qs = list(build_search_queryset(q)[:10])
+    venue_slug = request.session.get("venue_slug")
+    qs = list(build_search_queryset(q, venue_slug)[:10])
 
     logger.info("search_api query=%r results=%d", q, len(qs))
 
@@ -201,11 +232,39 @@ class BeansView(TemplateView):
     template_name = "pages/beans.html"
 
 
+def select_venue(request):
+    venues = Venue.objects.filter(is_active=True)
+    return render(
+        request,
+        "pages/select_venue.html",
+        {"venues": venues, "next": request.GET.get("next", "/")},
+    )
+
+
+def set_venue(request, slug):
+    venue = get_object_or_404(Venue, slug=slug, is_active=True)
+    request.session["venue_slug"] = venue.slug
+    next_url = request.GET.get("next") or "/"
+    # next — параметр из query string, без проверки это open redirect
+    # (?next=https://evil.com увёл бы пользователя с доверенного домена)
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+        next_url = "/"
+    return redirect(next_url)
+
+
 def api_categories(request):
     """
-    Список всех категорий меню — для мобильного приложения.
+    Список категорий меню для выбранной точки — для мобильного приложения.
     """
-    categories = Category.objects.all().order_by("order", "name")
+    venue_slug, error = _require_venue_param(request)
+    if error:
+        return error
+
+    categories = (
+        Category.objects.filter(venues__slug=venue_slug)
+        .distinct()
+        .order_by("order", "name")
+    )
     data = [
         {
             "id": c.id,
@@ -220,10 +279,17 @@ def api_categories(request):
 
 def api_items(request):
     """
-    Список позиций меню. Фильтр по категории через ?category=slug
+    Список позиций меню выбранной точки. Фильтр по категории через ?category=slug
     """
+    venue_slug, error = _require_venue_param(request)
+    if error:
+        return error
+
     category_slug = request.GET.get("category")
-    items = Item.objects.filter(is_active=True).select_related("category")
+    items = (
+        Item.objects.filter(is_active=True, category__venues__slug=venue_slug)
+        .select_related("category")
+    )
 
     if category_slug:
         items = items.filter(category__slug=category_slug)
@@ -270,9 +336,13 @@ def api_item_detail(request, slug):
 
 def api_home(request):
     """
-    Данные для главного экрана — сезонные и новые позиции,
+    Данные для главного экрана выбранной точки — сезонные и новые позиции,
     разделённые на еду и напитки, зеркалит логику HomeView.
     """
+    venue_slug, error = _require_venue_param(request)
+    if error:
+        return error
+
     DRINK_SLUGS = ['non_coffee', 'ice_coffee', 'cocktails']
 
     def serialize(item):
@@ -287,24 +357,24 @@ def api_home(request):
             "category_slug": item.category.slug,
         }
 
+    base = Item.objects.filter(is_active=True, category__venues__slug=venue_slug)
+
     seasonal_food = list(
-        Item.objects.filter(is_seasonal=True, is_active=True)
+        base.filter(is_seasonal=True)
         .exclude(category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
     seasonal_drinks = list(
-        Item.objects.filter(is_seasonal=True, is_active=True)
-        .filter(category__slug__in=DRINK_SLUGS)
+        base.filter(is_seasonal=True, category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
     new_food = list(
-        Item.objects.filter(is_new=True, is_active=True)
+        base.filter(is_new=True)
         .exclude(category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
     new_drinks = list(
-        Item.objects.filter(is_new=True, is_active=True)
-        .filter(category__slug__in=DRINK_SLUGS)
+        base.filter(is_new=True, category__slug__in=DRINK_SLUGS)
         .select_related("category")[:6]
     )
 

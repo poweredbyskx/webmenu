@@ -1,3 +1,5 @@
+from django.test import TestCase
+
 from menu.models import Category, Venue
 
 
@@ -9,5 +11,24 @@ def make_venue(**kwargs):
 
 
 def make_category(**kwargs):
-    kwargs.setdefault("venue", make_venue())
-    return Category.objects.create(**kwargs)
+    venues = kwargs.pop("venues", None)
+    if venues is None:
+        venues = [make_venue()]
+    category = Category.objects.create(**kwargs)
+    category.venues.set(venues)
+    return category
+
+
+class VenueSessionTestCase(TestCase):
+    """
+    Базовый TestCase для вьюх сайта: кладёт venue_slug в сессию клиента,
+    чтобы VenueSelectionMiddleware не редиректил запросы на select_venue.
+    Наследники, переопределяющие setUp, должны звать super().setUp().
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.venue = make_venue()
+        session = self.client.session
+        session["venue_slug"] = self.venue.slug
+        session.save()

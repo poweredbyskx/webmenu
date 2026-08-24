@@ -1023,6 +1023,107 @@ img {
   object-fit: cover;
 }
 
+/* =====================
+   VENUE SELECT CARD
+   ===================== */
+
+.venue-select-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  min-height: 650px;
+  margin: 40px auto;
+  background: var(--white);
+  border: 1px solid var(--primary);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 25px 40px;
+  box-sizing: border-box;
+}
+
+.venue-select-card__watermark {
+  position: absolute;
+  z-index: 0;
+  /* проценты от размеров самой карточки (см. Figma node 619:178) —
+     тянется вместе с карточкой на узких экранах, а не фиксированный px */
+  width: 474.55%;
+  height: 164.31%;
+  max-width: none; /* иначе глобальное правило img{max-width:100%} обрежет разлёт до размера карточки */
+  left: -183.52%;
+  top: -31.69%;
+  pointer-events: none;
+}
+
+.venue-select-card__logo {
+  position: relative;
+  z-index: 1;
+  width: 250px;
+  height: auto;
+  margin-top: 20px;
+}
+
+.venue-select-card__title {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+  max-width: 250px;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.2;
+  color: var(--primary);
+  text-align: center;
+}
+
+.venue-select-card__subtitle {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  max-width: 280px;
+  font-size: 18px;
+  line-height: 1.35;
+  color: rgba(101, 42, 41, 0.7);
+  text-align: center;
+}
+
+.venue-select-card__list {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.venue-select-card__option {
+  display: block;
+  width: 100%;
+  height: 50px;
+  line-height: 48px;
+  padding: 0 20px;
+  border-radius: 20px;
+  background: var(--card-yellow);
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 10px 0 rgba(101, 42, 41, 0.25);
+  color: var(--primary);
+  font-size: 20px;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: transform 0.2s;
+}
+
+.venue-select-card__option:hover {
+  transform: scale(1.02);
+}
+
+.venue-select-card__option:active {
+  transform: scale(0.97);
+}
+
 .info-section--dark {
   background: var(--primary);
   border-radius: 10px;
