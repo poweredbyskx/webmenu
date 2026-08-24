@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from menu.middleware import DEFAULT_VENUE_SLUG
+from menu.models import Venue
 from menu.tests.factories import make_venue
 
 
@@ -10,6 +11,8 @@ class VenueSelectionMiddlewareTests(TestCase):
         # ВРЕМЕННО: пока kakao_gaudan наполняется контентом, свежий визит без
         # выбранной точки должен незаметно получить старое меню (Мир 4),
         # а не упираться в обязательный выбор.
+        # Миграция 0012 уже создаёт kakao_mir4 сама — make_venue тут просто
+        # идемпотентно подтверждает, что она существует.
         make_venue(slug=DEFAULT_VENUE_SLUG, name="Мир 4")
 
         response = self.client.get(reverse("home"))
@@ -18,7 +21,12 @@ class VenueSelectionMiddlewareTests(TestCase):
 
     def test_redirects_to_select_venue_when_default_venue_missing(self):
         # Если дефолтная точка вообще не существует в базе — это не должно
-        # тихо ломаться, а должно явно отправить на выбор.
+        # тихо ломаться, а должно явно отправить на выбор. В реальности
+        # миграция 0012 гарантирует, что kakao_mir4 существует — но
+        # подстраховку на случай его удаления/деактивации всё равно стоит
+        # проверять, поэтому явно убираем её здесь.
+        Venue.objects.filter(slug=DEFAULT_VENUE_SLUG).delete()
+
         response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("select_venue"), response.url)

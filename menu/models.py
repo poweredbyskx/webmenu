@@ -9,6 +9,12 @@ class Venue(models.Model):
     name = models.CharField("Название", max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     address = models.CharField("Адрес", max_length=255, blank=True)
+    phone = models.CharField(
+        "Телефон", max_length=20, blank=True,
+        help_text="В формате +99364359786 — используется как есть в ссылке tel:",
+    )
+    google_maps_url = models.URLField("Ссылка Google Maps", max_length=500, blank=True)
+    apple_maps_url = models.URLField("Ссылка Apple Maps", max_length=500, blank=True)
     logo = models.ImageField("Логотип", upload_to="venues/", blank=True, null=True)
     is_active = models.BooleanField("Активно", default=True)
     order = models.PositiveIntegerField("Порядок", default=0, db_index=True)
