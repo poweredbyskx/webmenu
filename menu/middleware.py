@@ -1,3 +1,5 @@
+import time
+
 from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -20,11 +22,12 @@ VENUE_EXEMPT_PATHS_PREFIXES = (
 # зарегистрированы вне i18n_patterns и всегда идут без префикса).
 _LANGUAGE_CODES = {code for code, _ in settings.LANGUAGES}
 
-# ВРЕМЕННО: пока меню kakao_gaudan наполняется контентом, по умолчанию
-# незаметно подставляем старую точку (Мир 4), а не заставляем выбирать —
-# сменить точку можно вручную через клик по логотипу (-> /choose-venue/).
-# Убрать/заменить, когда появится финальный UX выбора точки.
-DEFAULT_VENUE_SLUG = "kakao_mir4"
+# Выбор точки живёт сутки — по истечении срока сайт снова спросит, какое
+# кафе показывать. Клик по логотипу к выбору точки больше не ведёт (это
+# теперь обычная ссылка на главную) — до появления отдельной кнопки смены
+# локации внутри сайта единственный способ увидеть карточку раньше срока —
+# истечение суток или очистка cookies.
+VENUE_SESSION_TTL_SECONDS = 24 * 60 * 60
 
 
 def _strip_locale_prefix(path):
@@ -42,12 +45,17 @@ class VenueSelectionMiddleware:
         path = _strip_locale_prefix(request.path)
         if not path.startswith(VENUE_EXEMPT_PATHS_PREFIXES):
             slug = request.session.get("venue_slug")
-            if not slug:
-                slug = DEFAULT_VENUE_SLUG
-                request.session["venue_slug"] = slug
-            # выбранная точка (в т.ч. дефолтная) могла быть деактивирована —
-            # сбросить сессию и отправить на выбор, а не тихо падать/показывать пусто
+            set_at = request.session.get("venue_set_at")
+            expired = set_at is None or (time.time() - set_at) > VENUE_SESSION_TTL_SECONDS
+
+            if not slug or expired:
+                request.session.pop("venue_slug", None)
+                request.session.pop("venue_set_at", None)
+                return redirect(reverse("select_venue") + f"?next={request.path}")
+            # выбранная точка могла быть деактивирована — сбросить сессию и
+            # отправить на выбор, а не тихо падать/показывать пусто
             if not Venue.objects.filter(slug=slug, is_active=True).exists():
-                del request.session["venue_slug"]
+                request.session.pop("venue_slug", None)
+                request.session.pop("venue_set_at", None)
                 return redirect(reverse("select_venue") + f"?next={request.path}")
         return self.get_response(request)

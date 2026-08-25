@@ -1046,7 +1046,7 @@ img {
   min-height: 650px;
   flex-shrink: 0;
   background: var(--white);
-  border: 1px solid var(--primary);
+  border: 3px solid var(--primary);
   border-radius: 20px;
   overflow: hidden;
   display: flex;
@@ -1059,20 +1059,21 @@ img {
 .venue-select-card__watermark {
   position: absolute;
   z-index: 0;
-  /* проценты от размеров самой карточки (см. Figma node 619:178) —
+  /* проценты от размеров самой карточки (см. Figma node 624:178) —
      тянется вместе с карточкой на узких экранах, а не фиксированный px */
-  width: 474.55%;
-  height: 164.31%;
+  width: 545.64%;
+  height: 188.92%;
   max-width: none; /* иначе глобальное правило img{max-width:100%} обрежет разлёт до размера карточки */
-  left: -183.52%;
-  top: -31.69%;
+  left: -225.13%;
+  top: -44.44%;
+  border-radius: 20px;
   pointer-events: none;
 }
 
 .venue-select-card__logo {
   position: relative;
   z-index: 1;
-  width: 250px;
+  width: 300px;
   height: auto;
   margin-top: 20px;
 }
@@ -1089,22 +1090,11 @@ img {
   text-align: center;
 }
 
-.venue-select-card__subtitle {
-  position: relative;
-  z-index: 1;
-  margin-top: 12px;
-  max-width: 280px;
-  font-size: 18px;
-  line-height: 1.35;
-  color: rgba(101, 42, 41, 0.7);
-  text-align: center;
-}
-
 .venue-select-card__list {
   position: relative;
   z-index: 1;
   width: 100%;
-  margin-top: 70px;
+  margin-top: 110px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -1114,14 +1104,15 @@ img {
   display: block;
   width: 100%;
   height: 50px;
-  line-height: 48px;
+  line-height: 46px;
   padding: 0 20px;
   border-radius: 20px;
   background: var(--card-yellow);
-  border: 1px solid var(--primary);
+  border: 2px solid var(--primary);
   box-shadow: 0 0 10px 0 rgba(101, 42, 41, 0.25);
   color: var(--primary);
   font-size: 20px;
+  font-weight: 500;
   text-align: center;
   text-decoration: none;
   box-sizing: border-box;

@@ -11,7 +11,6 @@
     <img src="{% static 'menu/images/venue_select_watermark.png' %}" alt="" class="venue-select-card__watermark">
     <img src="{% static 'menu/images/venue_select_logo.png' %}" alt="Какао" class="venue-select-card__logo">
     <h1 class="venue-select-card__title">Выберете меню заведения</h1>
-    <p class="venue-select-card__subtitle">Барное меню одинаковое на обеих точках кафе</p>
     <div class="venue-select-card__list">
       {% for venue in venues %}
         <a href="{% url 'set_venue' venue.slug %}?next={{ next|urlencode }}" class="venue-select-card__option">Меню точки на {{ venue.name }}</a>
