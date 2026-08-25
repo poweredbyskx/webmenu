@@ -1364,3 +1364,69 @@ img {
   color: #3E685A;
   text-decoration-color: #3E685A;
 }
+
+/* =====================
+   VENUE SWITCHER (плавающая кнопка смены точки)
+   ===================== */
+
+.venue-switcher {
+  position: fixed;
+  left: 16px;
+  bottom: 20px;
+  z-index: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 210px; /* явная ширина вместо auto — иначе transition по width не анимируется */
+  height: 50px;
+  padding: 0 18px;
+  background: var(--card-yellow);
+  border: 1.5px solid var(--primary);
+  border-radius: 50px;
+  box-shadow: 0 0 10px 0 rgba(101, 42, 41, 0.25);
+  text-decoration: none;
+  color: var(--primary);
+  overflow: hidden;
+  transition: width 0.25s ease, padding 0.25s ease;
+  cursor: pointer;
+}
+
+.venue-switcher__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.venue-switcher__label {
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@keyframes venueSwitcherFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.venue-switcher__icon,
+.venue-switcher__label {
+  animation: venueSwitcherFadeIn 0.2s ease;
+}
+
+/* по умолчанию (развёрнуто) — виден только текст */
+.venue-switcher--expanded .venue-switcher__icon {
+  display: none;
+}
+
+/* при скролле сворачивается в кружок с иконкой */
+.venue-switcher--collapsed {
+  width: 50px;
+  padding: 0;
+  gap: 0;
+}
+
+.venue-switcher--collapsed .venue-switcher__label {
+  display: none;
+}
