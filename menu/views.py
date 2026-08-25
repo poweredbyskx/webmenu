@@ -1,4 +1,5 @@
 import logging
+import time
 
 from django.db.models import Q
 from django.http import JsonResponse
@@ -244,6 +245,7 @@ def select_venue(request):
 def set_venue(request, slug):
     venue = get_object_or_404(Venue, slug=slug, is_active=True)
     request.session["venue_slug"] = venue.slug
+    request.session["venue_set_at"] = time.time()
     next_url = request.GET.get("next") or "/"
     # next — параметр из query string, без проверки это open redirect
     # (?next=https://evil.com увёл бы пользователя с доверенного домена)

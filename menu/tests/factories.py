@@ -1,3 +1,5 @@
+import time
+
 from django.test import TestCase
 
 from menu.models import Category, Venue
@@ -31,4 +33,5 @@ class VenueSessionTestCase(TestCase):
         self.venue = make_venue()
         session = self.client.session
         session["venue_slug"] = self.venue.slug
+        session["venue_set_at"] = time.time()
         session.save()
