@@ -22,6 +22,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.contrib.sitemaps.views import sitemap
 from menu.sitemaps import StaticSitemap
+from menu.views import download_apk
 
 sitemaps = {
     'static': StaticSitemap,
@@ -31,6 +32,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("i18n/", include("django.conf.urls.i18n")),
     path("sitemap.xml", sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path("admin-tools/download-apk/", download_apk, name="download_apk"),
 ]
 
 urlpatterns += i18n_patterns(

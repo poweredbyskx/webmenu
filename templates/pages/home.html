@@ -390,4 +390,25 @@ function updateCafeStatus() {
 updateCafeStatus();
 setInterval(updateCafeStatus, 60000);
 </script>
+
+{% if request.user.is_staff %}
+<script>
+  (function() {
+    const footerEl = document.getElementById('siteFooter');
+    if (!footerEl) return;
+    const HOLD_MS = 2000;
+    let holdTimer;
+
+    footerEl.addEventListener('pointerdown', function() {
+      holdTimer = setTimeout(function() {
+        window.location.href = '{% url "download_apk" %}';
+      }, HOLD_MS);
+    });
+
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(ev) {
+      footerEl.addEventListener(ev, function() { clearTimeout(holdTimer); });
+    });
+  })();
+</script>
+{% endif %}
 {% endblock %}

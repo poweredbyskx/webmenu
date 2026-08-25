@@ -1,8 +1,9 @@
 import logging
 import time
 
+from django.conf import settings
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import FileResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import ListView, TemplateView
@@ -252,6 +253,33 @@ def set_venue(request, slug):
     if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
         next_url = "/"
     return redirect(next_url)
+
+
+def download_apk(request):
+    """
+    Раздача свежего APK планшетам через сайт вместо ручной передачи файла.
+    Доступ только staff — иначе 403, без утечки, существует ли файл вообще.
+    """
+    if not (request.user.is_authenticated and request.user.is_staff):
+        return HttpResponseForbidden()
+
+    apk_path = settings.APK_RELEASES_DIR / "KAKAO.apk"
+    if not apk_path.exists():
+        return HttpResponseForbidden()
+
+    response = FileResponse(
+        open(apk_path, "rb"),
+        as_attachment=True,
+        filename="KAKAO.apk",
+        content_type="application/vnd.android.package-archive",
+    )
+    response["Cache-Control"] = "no-store"
+
+    version_path = settings.APK_RELEASES_DIR / "version.txt"
+    if version_path.exists():
+        response["X-Apk-Version"] = version_path.read_text().strip()
+
+    return response
 
 
 def api_categories(request):
