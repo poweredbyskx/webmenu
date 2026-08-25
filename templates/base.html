@@ -133,6 +133,22 @@
   </footer>
   {% endblock %}
 
+  {% block venue_switcher %}
+  {% if current_venue %}
+    <a href="{% url 'select_venue' %}" class="venue-switcher venue-switcher--expanded" id="venueSwitcher">
+      <span class="venue-switcher__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M17 1L21 5L17 9" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 11V9C3 7.9 3.4 6.9 4.2 6.2C4.9 5.4 5.9 5 7 5H21" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 23L3 19L7 15" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 13V15C21 16.1 20.6 17.1 19.8 17.8C19.1 18.6 18.1 19 17 19H3" stroke="#652a29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="venue-switcher__label">Сменить заведение</span>
+    </a>
+  {% endif %}
+  {% endblock %}
+
   {% block extra_js %}{% endblock %}
 <script>
   function track(goal, params) {
@@ -150,6 +166,24 @@
 
     document.addEventListener('click', function() {
       langDropdown.classList.remove('open');
+    });
+  }
+
+  const venueSwitcher = document.getElementById('venueSwitcher');
+  if (venueSwitcher) {
+    window.addEventListener('scroll', function() {
+      venueSwitcher.classList.remove('venue-switcher--expanded');
+      venueSwitcher.classList.add('venue-switcher--collapsed');
+    }, { passive: true });
+
+    venueSwitcher.addEventListener('click', function(e) {
+      if (venueSwitcher.classList.contains('venue-switcher--collapsed')) {
+        e.preventDefault();
+        venueSwitcher.classList.remove('venue-switcher--collapsed');
+        venueSwitcher.classList.add('venue-switcher--expanded');
+      } else {
+        track('venue_switcher_click');
+      }
     });
   }
 </script>
