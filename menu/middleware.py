@@ -12,7 +12,7 @@ from .models import Venue
 # строго по префиксу пути, не по имени URL.
 VENUE_EXEMPT_PATHS_PREFIXES = (
     "/static/", "/media/", "/admin/", "/api/", "/i18n/", "/sitemap.xml",
-    "/choose-venue/", "/set-venue/",
+    "/choose-venue/", "/set-venue/", "/admin-tools/",
 )
 
 # menu.urls целиком обёрнуты в i18n_patterns() (см. config/urls.py) —

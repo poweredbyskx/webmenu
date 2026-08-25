@@ -116,6 +116,12 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Файлы, которые НЕ должны быть доступны напрямую по URL (ни через
+# Django dev static serving, ни через nginx /media/) — только через
+# view с явной проверкой прав. Поэтому сознательно не под MEDIA_ROOT/
+# STATIC_ROOT, а в отдельной непубличной папке.
+APK_RELEASES_DIR = BASE_DIR / "releases" / "app"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- Security (prod) ----------------------------------------------------
