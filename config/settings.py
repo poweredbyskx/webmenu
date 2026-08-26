@@ -177,12 +177,17 @@ JAZZMIN_SETTINGS = {
     "copyright": "Кофе и Завтраки",
     "navigation_expanded": False,
     "show_ui_builder": False,
-    "topmenu_links": [
-        {"name": "Перейти на Сайт", "url": "/", "icon": "fas fa-home", "new_window": False},
-    ],
-    "usermenu_links": [
-        {"name": "Перейти на сайт", "url": "/", "icon": "fas fa-home", "new_window": False},
-    ],
+    "topmenu_links": [],
+    "usermenu_links": [],
+    # Показываются в общем списке моделей (там же, где "Категории",
+    # "Позиции меню" и т.д.), под группой app_label="menu" — а не только
+    # в верхней панели.
+    "custom_links": {
+        "menu": [
+            {"name": "Перейти на сайт", "url": "home", "icon": "fas fa-home"},
+            {"name": "Скачать APK", "url": "download_apk", "icon": "fas fa-download"},
+        ],
+    },
 }
 
 JAZZMIN_UI_TWEAKS = {
