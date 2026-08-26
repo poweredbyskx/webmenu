@@ -179,9 +179,11 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": False,
     "topmenu_links": [
         {"name": "Перейти на Сайт", "url": "/", "icon": "fas fa-home", "new_window": False},
+        {"name": "Скачать APK", "url": "/admin-tools/download-apk/", "icon": "fas fa-download", "new_window": True},
     ],
     "usermenu_links": [
         {"name": "Перейти на сайт", "url": "/", "icon": "fas fa-home", "new_window": False},
+        {"name": "Скачать APK", "url": "/admin-tools/download-apk/", "icon": "fas fa-download", "new_window": True},
     ],
 }
 
