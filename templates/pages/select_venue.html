@@ -14,7 +14,7 @@
     <h1 class="venue-select-card__title">Выберете меню заведения</h1>
     <div class="venue-select-card__list">
       {% for venue in venues %}
-        <a href="{% url 'set_venue' venue.slug %}?next={{ next|urlencode }}" class="venue-select-card__option">Меню точки на {{ venue.name }}</a>
+        <a href="{% url 'set_venue' venue.slug %}?next={{ next|urlencode }}" class="venue-select-card__option">{{ venue.name }}</a>
       {% endfor %}
     </div>
   </div>
