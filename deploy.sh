@@ -1,22 +1,35 @@
 #!/bin/bash
+set -e
 echo "=== Деплой на сервер ==="
 
 SERVER="ubuntu@216.250.9.226"
 REMOTE="/home/ubuntu/webmenu"
 LOCAL="/home/sk/webmenu"
 
-# Только код — без медиа, без .pyc
-scp $LOCAL/menu/models.py $SERVER:$REMOTE/menu/
-scp $LOCAL/menu/views.py $SERVER:$REMOTE/menu/
-scp $LOCAL/menu/admin.py $SERVER:$REMOTE/menu/
-scp $LOCAL/menu/urls.py $SERVER:$REMOTE/menu/
-scp $LOCAL/menu/sitemaps.py $SERVER:$REMOTE/menu/
-scp $LOCAL/menu/context_processors.py $SERVER:$REMOTE/menu/
-scp -r $LOCAL/menu/migrations/ $SERVER:$REMOTE/menu/
-scp -r $LOCAL/templates/ $SERVER:$REMOTE/
-scp $LOCAL/static/menu/css/style.css $SERVER:$REMOTE/static/menu/css/
-scp $LOCAL/static/menu/css/theme.css $SERVER:$REMOTE/static/menu/css/
-scp $LOCAL/requirements.txt $SERVER:$REMOTE/
+# Синхронизируем весь репозиторий, а не отдельные файлы вручную — раньше
+# список scp отставал от кода (например, menu/middleware.py вообще не
+# попадал на сервер) и это не было заметно, пока что-то не ломалось.
+# Без --delete: не трогаем то, что есть только на сервере (.env с прод-
+# секретами, media/, releases/app/ с APK и т.п.) — но и не подчищаем
+# файлы, удалённые локально, их придётся убирать на сервере руками.
+rsync -avz \
+  --exclude='.git/' \
+  --exclude='venv/' \
+  --exclude='.venv/' \
+  --exclude='env/' \
+  --exclude='ENV/' \
+  --exclude='__pycache__/' \
+  --exclude='*.py[cod]' \
+  --exclude='.env' \
+  --exclude='.env.local' \
+  --exclude='.env.*.local' \
+  --exclude='db.sqlite3' \
+  --exclude='staticfiles/' \
+  --exclude='media/' \
+  --exclude='releases/' \
+  --exclude='.ruff_cache/' \
+  --exclude='.claude/' \
+  "$LOCAL"/ "$SERVER:$REMOTE"/
 
 # Команды на сервере
 ssh $SERVER << 'ENDSSH'
